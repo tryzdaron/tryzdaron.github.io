@@ -1,0 +1,677 @@
+/* === RESET === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* === HEADER LAYOUT === */
+/* Default header (for all pages) */
+header {
+  position: relative;
+  background: linear-gradient(#d0cece, #2c2c2c);
+  color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4rem 8%;
+  min-height: auto; /* no full-screen height by default */
+}
+
+/* Home page header (only fills screen on index.html) */
+.home-header {
+  min-height: 100vh;
+}
+
+
+/* === LOGO SECTION (Top-left corner) === */
+.logo {
+  position: absolute;
+  top: 1.5rem; /* distance from top */
+  left: 2rem;  /* distance from left */
+  align-items: center;
+  gap: 0.5rem; /* space between logo image and text */
+}
+
+/* Remove underline and fix alignment for the logo link */
+.logo a,
+.logo-link {
+  display: flex; /* keep image and text side-by-side */
+  align-items: center; /* vertically align them */
+  gap: 0.5rem; /* spacing between logo and text */
+  text-decoration: none; /* remove underline */
+  color: inherit; /* keep same color as parent (.logo-text) */
+}
+
+
+/* Logo image */
+.logo-img {
+  width: 50px; /* size of logo image */
+  height: auto;
+}
+
+/* Logo text */
+.logo-text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #000000; /* bright accent color */
+  letter-spacing: 1px;
+}
+
+/* === NAVIGATION BAR (Top-right corner) === */
+nav {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #000000;
+}
+
+/* === TEXT CONTENT (LEFT SIDE) === */
+.text-content {
+  max-width: 50%; /* take half the header width */
+}
+
+.text-content h1 {
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.text-content p {
+  color: #ccc;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  max-width: 500px;
+}
+
+/* Button styling */
+.text-content button {
+  background: #ffffff;
+  color: #1e1e1e;
+  border: none;
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.text-content button:hover {
+  background: #000000;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* === RIGHT-SIDE IMAGE === */
+.hero-img {
+  width: 420px;
+  height: auto;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+/* === RESPONSIVE DESIGN (for small screens) === */
+@media (max-width: 900px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 6rem; /* adds some breathing space for absolute logo/nav */
+  }
+
+  /* Keep logo fixed top-left on mobile */
+  .logo {
+    position: absolute;
+    top: 1rem;
+    left: 1.5rem;
+    justify-content: flex-start;
+  }
+
+  /* Keep nav fixed top-right on mobile */
+  nav {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+  }
+
+  .text-content {
+    max-width: 100%;
+    margin-top: 6rem; /* pushes text down so it doesn’t overlap logo/nav */
+  }
+
+  .hero-img {
+    width: 250px;
+    margin-top: 2rem;
+  }
+}  
+
+
+/* Hide hamburger on large screens */
+.menu-toggle {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+/* Hide nav links by default on mobile */
+@media (max-width: 900px) {
+  nav ul {
+    display: none; /* hidden until toggle is clicked */
+    flex-direction: column;
+    background: hsla(0, 5%, 25%, 0.703);
+    position: absolute;
+    top: 4rem;
+    right: 1.5rem;
+    width: 200px;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  /* show hamburger */
+  .menu-toggle {
+    display: block;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+  }
+
+  /* When nav is open */
+  nav ul.open {
+    display: flex;
+  }
+}
+
+
+body {
+  background-color: #2c2c2c; /* deep dark background for contrast */
+  color: #f0f0f0; /* readable light text */
+  font-family: "Poppins", Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* === MAIN WRAPPER === */
+main {
+  width: 90%;
+  max-width: 1100px;
+  margin: 3rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem; /* space between sections */
+}
+
+/* === SECTION TITLES === */
+.section-h3 {
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #ffffff; /* bright cyan accent */
+  border-left: 5px solid hsl(0, 0%, 71%); 
+  padding-left: 10px;
+}
+
+/* === LISTS (Skills, Experiences, etc.) === */
+section ul {
+  list-style: none;
+  margin-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+section ul li {
+  background: #1e1e1e;
+  padding: 1rem;
+  border-radius: 8px;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+
+.skills-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.skills-list li {
+  background: #222;
+  color: #fff;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.skills-list li:hover {
+  background: #444;
+}
+
+
+
+/* Hobbies*/
+
+#my-hobbies{
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.my-hobbies-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.hobbies-card{
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  height: 200px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+
+.hobbies-card:hover{
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3)
+}
+
+.hobbies-card img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(60%);
+  transition: filter 0.3s ease;
+}
+
+.hobbies-card:hover{
+  filter: brightness(80%);
+}
+
+.hobbies-text{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: hsl(0, 0%, 100%);
+  font-size: 1.2rem;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+
+/* Hide extra content by default */
+.hobby-content {
+  display: none;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Show when expanded */
+.hobbies-card.expanded .hobby-content {
+  display: block;
+}
+
+/* Thumbnail always fits the top area */
+.hobbies-card .thumb {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+/* Optional: smooth expand animation */
+.hobbies-card {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+
+.hobbies-card.expanded {
+  height: auto !important;
+  overflow: visible;
+  transition: all 0.4s ease;
+}
+
+.hobbies-card.expanded .hobby-content {
+  display: block;
+}
+
+
+/* === Expand/Collapse effect inside hobbies card === */
+.hobbies-card p {
+  display: none;
+  color: #fff;
+  background: rgba(0,0,0,0.6);
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0.5rem;
+  transition: opacity 0.3s ease;
+}
+
+.hobbies-card.expanded {
+  height: auto; /* grows with content */
+  transition: all 0.4s ease;
+}
+
+.hobbies-card.expanded p {
+  display: block;
+  opacity: 1;
+}
+
+.hobbies-card img {
+  transition: transform 0.3s ease;
+}
+
+.hobbies-card.expanded img {
+  transform: scale(1.05);
+  filter: brightness(80%);
+}
+
+/* === MODAL OVERLAY === */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: none; /* hidden by default */
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  padding: 1rem; /* ensures some space on small screens */
+  overflow-y: auto; /* scroll if content too tall */
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-box {
+  background: #1e1e1e;
+  color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 700px;
+  width: 100%;      /* fill available width on small screens */
+  max-height: 90vh;  /* never taller than 90% of viewport */
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+
+.modal-box img {
+  width: 100%;       /* fill modal width */
+  height: auto;      /* maintain aspect ratio */
+  max-height: 400px; /* limit image height on large screens */
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+/* Extra images inside modal */
+#modalExtra img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive text sizing */
+.modal-box h3 {
+  font-size: 1.4rem;
+}
+
+.modal-box p {
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .modal-box {
+    padding: 1rem;
+    max-height: 95vh;
+  }
+
+  .modal-box img,
+  #modalExtra img {
+    max-height: 250px; /* smaller for small screens */
+  }
+
+  .modal-box h3 {
+    font-size: 1.2rem;
+  }
+
+  .modal-box p {
+    font-size: 0.95rem;
+  }
+}
+
+#modalDesc {
+  margin-bottom: 30px;
+}
+
+.hobbies-card img.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* fills the card without stretching */
+  object-position: center; /* centers the image inside the card */
+  border-radius: 10px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+
+/* === CLOSE BUTTON === */
+#closeModal {
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+#closeModal:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* === ANIMATION === */
+@keyframes fadeIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+
+
+
+section ul li:hover {
+  background: #2a2a2a;
+  transform: translateY(-3px);
+}
+
+
+/* === STRONG TITLES (like job titles) === */
+section ul li strong {
+  color: hsl(0, 0%, 90%);
+  font-size: 1.1rem;
+}
+
+/* === PARAGRAPHS INSIDE LI === */
+section ul li p {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-top: 0.4rem;
+}
+
+/* === ABOUT ME SECTION === */
+#about-me {
+  background: #1c1c1c;
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+#about-me{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #ffffff; /* bright cyan accent */
+  padding-left: 10px;
+}
+
+#about-me p {
+  font-size: 1.05rem;
+  color: #e0e0e0;
+  text-align: justify;
+}
+
+/* === CONTACT FORM === */
+#contact-me form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #1e1e1e;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 600px;
+}
+
+/* Label styling */
+#contact-me label {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Input fields */
+#contact-me input[type="text"],
+#contact-me input[type="email"],
+#contact-me input[type="tel"],
+#contact-me input[type="name"],
+#contact-me textarea {
+  background: #2c2c2c;
+  color: #f5f5f5;
+  border: 1px solid #444;
+  padding: 0.8rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  resize: vertical;
+  transition: border 0.3s ease;
+}
+
+/* Input focus */
+#contact-me input:focus,
+#contact-me textarea:focus {
+  border-color: #ffffff;
+  outline: none;
+}
+
+/* Submit button */
+#contact-me input[type="submit"] {
+  background: #ffffff;
+  color: #121212;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 6px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#contact-me input[type="submit"]:hover {
+  background: #000000;
+  transform: scale(1.03);
+  color: white;
+}
+
+/* === FOOTER === */
+footer {
+  background: #0f0f0f;
+  text-align: center;
+  padding: 1.5rem;
+  margin-top: 4rem;
+  border-top: 1px solid #2a2a2a;
+}
+
+footer a {
+  color: hsl(0, 0%, 100%);
+  text-decoration: none;
+  margin: 0 1rem;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: hsl(0, 0%, 75%);
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+  main {
+    width: 95%;
+  }
+
+  section h3 {
+    font-size: 1.5rem;
+  }
+
+  #contact-me form {
+    padding: 1.5rem;
+  }
+
+  footer {
+    font-size: 0.9rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

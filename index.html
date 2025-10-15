@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!--Logo-->
+  <header class="home-header">
+  <div class="logo">
+  <a href="index.html" class="logo-link">
+    <img src="images/logo.png" class="logo-img" alt="Daron logo">
+    <h2 class="logo-text">Daron</h2>
+  </a>
+  </div>
+
+
+  <!--Navigation Bar-->
+  <nav>
+  <div class="menu-toggle" id="menu-toggle">
+    ☰
+  </div>
+  <ul id="nav-list">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="about.html">About Me</a></li>
+    <li><a href="#contact-me">Contact Me</a></li>
+  </ul>
+  </nav>
+
+
+  <!--Landing page text-->
+  <div class="text-content">
+    <h1>Hey There,<br>I'm Daron</h1>
+    <p>Welcome to my website — here you’ll get to know more about me, my interests, and the projects I’m working on.</p>
+    <button onclick="window.location.href='about.html'" id="aboutBtn">About Me</button>
+  </div>
+
+  <!--me img-->
+  <img src="images/Messenger_creation_261D2FB0-6E83-4A52-B680-E12AD2D1FFD7.jpeg" 
+       alt="A guy with a helmet sitting in a motorcycle" class="hero-img">
+</header>
+
+
+  <main>
+
+    <!--My Skills-->
+<section class="my-skills">
+  <h3 class="section-h3">My Skills</h3>
+  <ul class="skills-list">
+    <li data-skill="fast-learner">Fast Learner</li>
+    <li data-skill="problem-solving">Problem Solving</li>
+    <li data-skill="adaptability">Adaptability</li>
+    <li data-skill="patience">Patience</li>
+  </ul>
+</section>
+
+
+
+
+  <!--My Hobbies-->
+<section class="hobbies">
+  <h3 class="section-h3" id="my-hobbies">My Hobbies</h3>
+  <div class="my-hobbies-grid">
+
+    <div class="hobbies-card" 
+      data-hobby="Motorcycle"
+      data-description="I've always been curious about motorcycles — how they work and how they’re built. I never intended to own one, but fate had other plans. I got one for my birthday, and let me tell you, it didn’t stop there."
+      data-extra='[
+        {"type":"text","value":"This is the first bike I got from my birthday."},
+        {"type":"image","value":"images/motorcycle/IMG_20250520_172553.jpg"},
+        {"type":"text","value":"I modified it a lot i mean a lot and at first i was kinda scared to drove it around until i got a hang of it"},
+        {"type":"image","value":"images/motorcycle/IMG_20241206_124034.jpg"},
+        {"type":"text","value":"This is my second bike, which fate gave me once again. I’m so thankful for this blessing I received."},
+        {"type":"image","value":"images/motorcycle/IMG_20240714_093554.jpg"},
+        {"type":"text","value":"This one isn’t mine — it belongs to my best friend. He just let me take it for a ride."}
+      ]'
+      data-img="images/motorcycle/img_9367.jpg">
+
+      <img src="images/motorcycle/img_9367.jpg" alt="Motorcycle" class="thumb">
+      <div class="hobbies-text">Motorcycle</div>
+    </div>
+
+    <div class="hobbies-card"
+      data-hobby="Computer"
+      data-description="I love learning about hardware, programming, and building efficient systems."
+      data-extra='[
+        {"type":"image","value":"images/programming-background-with-person-working-with-codes-computer.jpg"},
+        {"type":"text","value":"I once built my own gaming PC from scratch."}
+      ]'
+      data-img="images/computer/programming-background-with-person-working-with-codes-computer.jpg">
+
+      <img src="images/computer/programming-background-with-person-working-with-codes-computer.jpg" alt="Computer" class="thumb">
+      <div class="hobbies-text">Computer</div>
+    </div>
+
+    <div class="hobbies-card"
+      data-hobby="Cycling"
+      data-description="Cycling helps me stay fit, explore new places, and clear my mind."
+      data-extra='[
+        {"type":"text","value":"Before i got in to motorcycle i start at bicycle first."},
+        {"type":"image","value":"images/bike/IMG_20230509_170545.jpg"},
+        {"type":"text","value":"i have a lot of bikes in the past so many to count, But this is my bike now."},
+        {"type":"image","value":"images/bike/IMG_20241214_080633.jpg"},
+        {"type":"text","value":"And i also own different kind of bikes like mountain bike, gravel bike, and roadbike. And this is my mountain bike which i gave it to my father"},
+        {"type":"image","value":"images/bike/IMG_20230119_073059.jpg"},
+        {"type":"text","value":"And this is my gravel bike which i sold it to my friend."},
+        {"type":"image","value":"images/bike/IMG_20230330_124755.jpg"},
+        {"type":"text","value":"I’ve loved bikes ever since I was a kid. Just like with my motorcycles, I enjoy customizing and repairing them myself."}
+      ]'
+      data-img="images/bike/Felt-Budget-BiCycle-Brand_8d802078fbe8ef7a7d85711f650cf9a4_800.jpg">
+
+      <img src="images/bike/Felt-Budget-BiCycle-Brand_8d802078fbe8ef7a7d85711f650cf9a4_800.jpg" alt="Cycling" class="thumb">
+      <div class="hobbies-text">Cycling</div>
+    </div>
+
+    <div class="hobbies-card"
+      data-hobby="Gaming"
+      data-description="Gaming sharpens reflexes, creativity, and problem-solving — and it’s fun."
+      data-extra='[
+        {"type":"image","value":"images/gaming_setup.jpg"},
+        {"type":"text","value":"I enjoy story-driven games that make you think."}
+      ]'
+      data-img="images/gaming/2fd8716f54f9592cc3a948e9f24edd91.jpg">
+
+      <img src="images/gaming/2fd8716f54f9592cc3a948e9f24edd91.jpg" alt="Gaming" class="thumb">
+      <div class="hobbies-text">Gaming</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- Modal overlay -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <img id="modalImg" alt="Hobby image">
+    <h3 id="modalTitle"></h3>
+    <p id="modalDesc"></p>
+    <div id="modalExtra"></div>
+    <button id="closeModal">Close</button>
+  </div>
+</div>
+
+
+
+
+<!--My Experiences-->
+<section>
+  <div class="section-h3">
+  <h3>My Experiences</h3>
+  </div>
+  <ul>
+    <li>
+      <strong>Technician</strong>
+      <p>I’m a self-taught technician. I repair my own phones and laptops and have developed solid troubleshooting skills over time.</p>
+    </li>
+
+    <li>
+      <strong>Mechanic</strong>
+      <p>I’m a self-taught mechanic specializing in modern motorcycles (fuel-injected types), especially scooters.</p>
+    </li>
+
+    <li>
+      <strong>Front-End Developer</strong>
+      <p>I’m currently studying and practicing front-end development, aiming to become a full-stack developer.</p>
+    </li>
+
+    <li>
+      <strong>Delivery Rider / MC Taxi Driver</strong>
+      <p>I worked as a delivery rider for Lazada and as a motorcycle taxi driver for JoyRide and Angkas.</p>
+    </li>
+
+    <li>
+      <strong>Buy and Sell (Phones)</strong>
+      <p>I used to buy and sell phones. With my deep knowledge of mobile devices, I’ve successfully sold over 300+ units so far.</p>
+    </li>
+  </ul>
+</section>
+
+
+  <!---My nothing talent-->
+  <section>
+  <div class="section-h3">
+  <h3>My Talent</h3>
+  </div>
+  <ul>
+    <li>Nothing:(</li>
+  </ul>
+  </section>
+
+
+  <!--About me-->
+  <section id="about-me">
+    <h3 id="about-me">About me</h3>
+<p>My full name is Tryz Daron C. Odasco, and I was born on October 28, 2003. 
+I’m from the Philippines and currently studying web development. 
+I’m passionate about motorcycles, engines, and programming — basically anything that involves building and understanding how things work. 
+My goal is to become a skilled full-stack developer and create digital projects that actually make life easier. 
+I enjoy learning new skills, exploring new ideas, and always pushing myself to grow.</p>
+  </section>
+
+
+  <!--Contact me-->
+  <section id="contact-me">
+    <div class="section-h3">
+    <h3>Contact Me</h3>
+    </div>
+    <form>
+      <label for="name" >Name:</label>
+      <input type="name" id="name" name="name">
+
+      <br>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email">
+
+      <br>
+
+      <label for="contact-num">Contact #:</label>
+      <input type="tel" id="contact-num" name="contact-num">
+
+      <br>
+
+      <textarea  placeholder="Write your message"></textarea>
+      
+      <br>
+
+      <input type="submit" value="Submit">
+    </form>
+  </section>
+  </main>
+
+  <!--Footer-->
+<footer>
+<a href="">Terms and service</a>
+<a href="contact-me">Contact</a>
+<a href="about-me">About me</a>
+</footer>
+
+</body>
+<script src="script.js"></script>
+</html>
+
+
+
+
