@@ -31,6 +31,7 @@ header {
   left: 2rem;  /* distance from left */
   align-items: center;
   gap: 0.5rem; /* space between logo image and text */
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
 }
 
 /* Remove underline and fix alignment for the logo link */
@@ -63,6 +64,7 @@ nav {
   position: absolute;
   top: 1.5rem;
   right: 2rem;
+  text-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
 }
 
 nav ul {
@@ -85,6 +87,7 @@ nav a:hover {
 /* === TEXT CONTENT (LEFT SIDE) === */
 .text-content {
   max-width: 50%; /* take half the header width */
+  text-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
 }
 
 .text-content h1 {
@@ -110,6 +113,7 @@ nav a:hover {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
 }
 
 .text-content button:hover {
@@ -168,6 +172,7 @@ nav a:hover {
   font-size: 2rem;
   cursor: pointer;
   color: #ffffff;
+  text-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
 }
 
 /* Hide nav links by default on mobile */
@@ -609,8 +614,8 @@ section ul li p {
 
 #contact-me input[type="submit"]:hover {
   background: #000000;
-  transform: scale(1.03);
   color: white;
+  transform: scale(1.03);
 }
 
 /* === FOOTER === */
