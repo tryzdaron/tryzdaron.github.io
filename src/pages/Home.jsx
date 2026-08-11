@@ -17,7 +17,7 @@ function Home() {
   //About teaser — data + refs
   const aboutTeaserRef = useRef(null)
 
-  //Skills/Projects/Services (code editor block) — data + refs
+  //Skills/Projects/Services/GitHub (code editor block) — data + refs
   const terminalRef = useRef(null)
   const codeContentRef = useRef(null)
 
@@ -103,6 +103,12 @@ function Home() {
   const [servicesCommandText, setServicesCommandText] = useState('')
   const [servicesCommandDone, setServicesCommandDone] = useState(false)
   const [servicesGridVisible, setServicesGridVisible] = useState(false)
+
+  //useState — github (4th command, same pattern as the others)
+  const [githubVisible, setGithubVisible] = useState(false)
+  const [githubCommandText, setGithubCommandText] = useState('')
+  const [githubCommandDone, setGithubCommandDone] = useState(false)
+  const [githubGridVisible, setGithubGridVisible] = useState(false)
 
   //useState — code editor line numbers
   const [lineCount, setLineCount] = useState(1)
@@ -191,7 +197,7 @@ function Home() {
         clearInterval(typing)
         setSkillsCommandDone(true)
       }
-    }, 60)
+    }, 30)
 
     return () => clearInterval(typing)
   }, [terminalVisible])
@@ -238,7 +244,7 @@ function Home() {
         clearInterval(typing)
         setProjectsCommandDone(true)
       }
-    }, 100)
+    }, 60)
 
     return () => clearInterval(typing)
   }, [projectsVisible])
@@ -284,7 +290,7 @@ function Home() {
         clearInterval(typing)
         setServicesCommandDone(true)
       }
-    }, 60)
+    }, 30)
 
     return () => clearInterval(typing)
   }, [servicesVisible])
@@ -295,6 +301,52 @@ function Home() {
     const t = setTimeout(() => setServicesGridVisible(true), 350)
     return () => clearTimeout(t)
   }, [servicesCommandDone])
+
+  // GitHub — 4th command, same scroll-gate pattern as Projects/Services:
+  // requires real additional scrolling past where the user was when Services finished
+  useEffect(() => {
+    if (!servicesGridVisible) return
+
+    const scrollYAtFinish = window.scrollY
+    const scrollThreshold = 150
+
+    const handleScroll = () => {
+      if (window.scrollY > scrollYAtFinish + scrollThreshold) {
+        setGithubVisible(true)
+        window.removeEventListener('scroll', handleScroll)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [servicesGridVisible])
+
+  // GitHub — command typing
+  useEffect(() => {
+    if (!githubVisible) return
+
+    const command = 'fetch github-activity.log'
+    let index = 0
+
+    const typing = setInterval(() => {
+      if (index <= command.length) {
+        setGithubCommandText(command.slice(0, index))
+        index++
+      } else {
+        clearInterval(typing)
+        setGithubCommandDone(true)
+      }
+    }, 25)
+
+    return () => clearInterval(typing)
+  }, [githubVisible])
+
+  // GitHub heading pops in first, output (the stats images) drags in a beat after
+  useEffect(() => {
+    if (!githubCommandDone) return
+    const t = setTimeout(() => setGithubGridVisible(true), 350)
+    return () => clearTimeout(t)
+  }, [githubCommandDone])
 
   // line numbers grow to match the actual content height as it mounts
   useEffect(() => {
@@ -416,7 +468,7 @@ function Home() {
       </section>
 
 
-      {/* skills/projects/services (merged) */}
+      {/* skills/projects/services/github (merged) */}
       <section
         id="terminal-session"
         className={`terminal-session ${terminalVisible ? 'terminal-session-visible' : ''}`}
@@ -548,32 +600,45 @@ function Home() {
                 </div>
               )}
 
+              {/* GitHub — command 4, mounts once Services' grid has actually appeared, not just once the command finished typing */}
+              {servicesGridVisible && (
+                <div className="terminal-block">
+                  <p className="command-line">
+                    <span className="prompt">PS C:\Users&gt;</span> {githubCommandText}
+                    {!githubCommandDone && <span className="cursor">|</span>}
+                  </p>
+
+                  {githubCommandDone && (
+                    <h2 className="section-heading">GitHub Activity</h2>
+                  )}
+
+                  {githubGridVisible && (
+                    <>
+                      <img
+                        className="github-stats-img"
+                        src="https://github-readme-stats-iota-eight-71.vercel.app/api?username=tryzdaron&show_icons=true&theme=dark&bg_color=252526&title_color=569CD6&icon_color=4EC9B0&text_color=D4D4D4&border_color=333333"
+                        alt="GitHub stats"
+                      />
+                      <img
+                        className="github-stats-img"
+                        src="https://github-readme-activity-graph.vercel.app/graph?username=tryzdaron&theme=react-dark&bg_color=252526&color=4EC9B0&line=569CD6&point=D4D4D4&border=333333"
+                        alt="GitHub contribution activity graph"
+                      />
+
+                      <p className="terminal-success">✓ github-activity.log loaded successfully</p>
+                    </>
+                  )}
+                </div>
+              )}
+
             </div>
           </div>
         </div>
       </section>
 
 
-      {/* ── GitHub activity — standalone, visible without clicking ── */}
-      <section className="github-banner">
-        <div className="github-box">
-          <p className="github-label">&gt; github_activity</p>
-          <img
-            className="github-stats-img"
-            src="https://github-readme-stats.vercel.app/api?username=tryzdaron&show_icons=true&theme=dark&bg_color=252526&title_color=569CD6&icon_color=4EC9B0&text_color=D4D4D4&border_color=333333"
-            alt="GitHub stats"
-          />
-          <img
-            className="github-stats-img"
-            src="https://github-readme-activity-graph.vercel.app/graph?username=tryzdaron&theme=react-dark&bg_color=252526&color=4EC9B0&line=569CD6&point=D4D4D4&border=333333"
-            alt="GitHub contribution activity graph"
-          />
-        </div>
-      </section>
-
-
-      {/* ── Contact / note tabs — waits until everything above has finished ── */}
-      {servicesGridVisible && (
+      {/* ── Contact / note tabs — waits until everything above (including GitHub) has finished ── */}
+      {githubGridVisible && (
       <section className="contact-banner">
         <div className="contact-box">
           <div className="contact-tabs">

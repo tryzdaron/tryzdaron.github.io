@@ -560,9 +560,11 @@ body {
 }
 
 .github-stats-img {
-  max-width: 100%;
+  display: block;
+  width: 100%;
+  max-width: 495px;
+  margin: 0 auto 16px auto;
   border-radius: 6px;
-  margin-bottom: 16px;
 }
 
 
