@@ -21,6 +21,9 @@ function Home() {
   const terminalRef = useRef(null)
   const codeContentRef = useRef(null)
 
+  //Contact/note tabs — data + refs
+  const contactBoxRef = useRef(null)
+
   const projects = [
     {
       message: 'Managed product database — WordPress + Shopify system',
@@ -79,8 +82,14 @@ function Home() {
 
   //useState — hero
   const [lineIndex, setLineIndex] = useState(0)
-  const [typedText, setTypedText] = useState('')
+  const [typedText, setTypedText] = useState(() =>
+    sessionStorage.getItem('heroAnimationPlayed') === 'true' ? codeLines[0] : ''
+  )
   const [deleting, setDeleting] = useState(false)
+  // snapshot taken once at mount — deciding whether THIS mount should animate at all.
+  // sessionStorage getting set to true later (by the effect below) must not retroactively
+  // stop an animation already running on this same mount, hence a ref, not a live re-check.
+  const heroAlreadyPlayedRef = useRef(sessionStorage.getItem('heroAnimationPlayed') === 'true')
 
   //useState — about teaser
   const [aboutVisible, setAboutVisible] = useState(false)
@@ -121,10 +130,13 @@ function Home() {
 
   //useState — contact/note tabs
   const [contactTab, setContactTab] = useState('contact')
+  const [contactBoxVisible, setContactBoxVisible] = useState(false)
 
 
   // ── Hero typing animation — cycles through variable declaration styles
   useEffect(() => {
+    if (heroAlreadyPlayedRef.current) return // already played earlier this session — stay on the static finished text
+
     const currentLine = codeLines[lineIndex]
     let timer
 
@@ -145,6 +157,12 @@ function Home() {
 
     return () => clearTimeout(timer)
   }, [typedText, deleting, lineIndex])
+
+  // marks the animation as played for the rest of this browser tab/session,
+  // so navigating away and back skips straight to the finished state
+  useEffect(() => {
+    sessionStorage.setItem('heroAnimationPlayed', 'true')
+  }, [])
 
   // About teaser — scroll trigger (simple fade, no typing)
   useEffect(() => {
@@ -197,7 +215,7 @@ function Home() {
         clearInterval(typing)
         setSkillsCommandDone(true)
       }
-    }, 30)
+    }, 60)
 
     return () => clearInterval(typing)
   }, [terminalVisible])
@@ -244,7 +262,7 @@ function Home() {
         clearInterval(typing)
         setProjectsCommandDone(true)
       }
-    }, 60)
+    }, 100)
 
     return () => clearInterval(typing)
   }, [projectsVisible])
@@ -290,7 +308,7 @@ function Home() {
         clearInterval(typing)
         setServicesCommandDone(true)
       }
-    }, 30)
+    }, 60)
 
     return () => clearInterval(typing)
   }, [servicesVisible])
@@ -336,7 +354,7 @@ function Home() {
         clearInterval(typing)
         setGithubCommandDone(true)
       }
-    }, 25)
+    }, 60)
 
     return () => clearInterval(typing)
   }, [githubVisible])
@@ -363,6 +381,28 @@ function Home() {
 
     return () => resizeObserver.disconnect()
   }, [])
+
+  // Contact box — scroll trigger, so its inner lines only stagger-animate once it's actually scrolled into view.
+  // Depends on githubGridVisible since that's what mounts this section in the first place —
+  // without it, the effect would run once on page load, before contactBoxRef even exists.
+  useEffect(() => {
+    if (!githubGridVisible) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setContactBoxVisible(true)
+        }
+      },
+      { threshold: 0.2 }
+    )
+
+    if (contactBoxRef.current) {
+      observer.observe(contactBoxRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [githubGridVisible])
 
   // sends the anonymous note to n8n, with an invisible reCAPTCHA v3 token attached.
   // NOTE: replace YOUR_RECAPTCHA_SITE_KEY and the webhook URL below, and add
@@ -461,9 +501,8 @@ function Home() {
         </div>
         <div className="about-content">
           <p className="about-narrative">
-            I'm a self-taught web developer and automation specialist based in the Philippines. Over the past year, I've been building real projects — WordPress, Shopify, and n8n automations — while picking up React along the way.
+            Self-taught web developer and automation specialist based in the Philippines. I build websites and automate the boring parts — WordPress, Shopify, n8n workflows. Past year, that's meant real client work, and teaching myself React through this very site.
           </p>
-          <p className="about-learning">- Currently learning: SEO, Salesforce, 3D Printing, TypeScript</p>
         </div>
       </section>
 
@@ -640,7 +679,10 @@ function Home() {
       {/* ── Contact / note tabs — waits until everything above (including GitHub) has finished ── */}
       {githubGridVisible && (
       <section className="contact-banner">
-        <div className="contact-box">
+        <div
+          className={`contact-box ${contactBoxVisible ? 'contact-box-visible' : ''}`}
+          ref={contactBoxRef}
+        >
           <div className="contact-tabs">
             <button
               className={`contact-tab ${contactTab === 'contact' ? 'contact-tab-active' : ''}`}
@@ -668,7 +710,7 @@ function Home() {
 
           {contactTab === 'note' && (
             <div className="contact-panel">
-              <p className="note-subtext">no name, no email — just say what's on your mind.</p>
+              <p className="note-subtext">fully anonymous — no name, no email, just say what's on your mind</p>
               <form onSubmit={handleNoteSubmit}>
                 {/* honeypot — hidden from real users via CSS, bots tend to fill it anyway */}
                 <input
