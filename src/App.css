@@ -99,7 +99,6 @@ body {
 
 .home {
   min-height: 100vh;
-  padding-bottom: 100px;
 }
 
 
@@ -868,8 +867,8 @@ body {
 }
 
 .footer-socials {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
   gap: 16px;
 }
 

@@ -215,7 +215,7 @@ function Home() {
         clearInterval(typing)
         setSkillsCommandDone(true)
       }
-    }, 60)
+    }, 30)
 
     return () => clearInterval(typing)
   }, [terminalVisible])
@@ -262,7 +262,7 @@ function Home() {
         clearInterval(typing)
         setProjectsCommandDone(true)
       }
-    }, 100)
+    }, 50)
 
     return () => clearInterval(typing)
   }, [projectsVisible])
@@ -308,7 +308,7 @@ function Home() {
         clearInterval(typing)
         setServicesCommandDone(true)
       }
-    }, 60)
+    }, 30)
 
     return () => clearInterval(typing)
   }, [servicesVisible])
@@ -354,7 +354,7 @@ function Home() {
         clearInterval(typing)
         setGithubCommandDone(true)
       }
-    }, 60)
+    }, 30)
 
     return () => clearInterval(typing)
   }, [githubVisible])

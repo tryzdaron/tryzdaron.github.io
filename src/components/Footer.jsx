@@ -11,10 +11,10 @@ import {
 function Footer() {
   const navLinks = [
     { label: 'Home', path: '/' },
-    { label: 'About', path: '/about' },
     { label: 'Projects', path: '/projects' },
-    { label: 'Services', path: '/services' },
-    { label: 'Contact', path: '/contact' }
+    { label: 'Contact', path: '/contact' },
+    { label: 'About', path: '/about' },
+    { label: 'Services', path: '/services' }
   ]
 
   const socialLinks = [
