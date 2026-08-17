@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import avatar from '../assets/Images/avatar.jpg'
+import projects from '../data/projects'
+import ProjectModal from '../components/ProjectModal'
 
 function Home() {
 
@@ -24,39 +26,19 @@ function Home() {
   //Contact/note tabs — data + refs
   const contactBoxRef = useRef(null)
 
-  const projects = [
-    {
-      message: 'Managed product database — WordPress + Shopify system',
-      shortDescription: 'Handled product listings and data for an Australian eco-hygiene brand.',
-      role: 'Managed the product database — details, listings, and data structure.',
-      stack: 'WordPress (Oxygen Builder) + Shopify',
-      note: 'The two platforms were connected via a custom API, built by a senior developer on the team.',
-      tags: ['WordPress', 'Shopify', 'Product Database Management', 'Team Collaboration']
-    },
-    {
-      message: 'Built landing page for a task/service platform',
-      shortDescription: 'Developed a landing page, including a fully responsive mobile version.',
-      role: 'Built the landing page.',
-      stack: 'Figma, WordPress + Oxygen Builder',
-      tags: ['WordPress', 'Oxygen Builder', 'Figma', 'Landing Page']
-    },
-    {
-      message: 'Built AI-powered news briefing bot',
-      shortDescription: 'Automated Telegram bot summarizing daily news via AI.',
-      role: 'Built a Telegram bot that pulls news from multiple RSS sources and summarizes it with an LLM.',
-      stack: 'n8n, Groq LLM, Supabase, hosted on Render',
-      note: 'Automatically broadcasts daily briefings to subscribers.',
-      tags: ['n8n', 'Telegram Bot', 'Groq LLM', 'Supabase', 'Render']
-    },
-    {
-      message: 'Built automation for finding YouTube clips',
-      shortDescription: 'AI-powered tool that finds standout moments in long videos.',
-      role: 'Built a tool that scans long YouTube videos and picks out the most interesting short clips using AI.',
-      stack: 'n8n, Supadata API, Groq LLM, Google Sheets',
-      note: 'Built for my own YouTube automation channel.',
-      tags: ['Automation', 'AI', 'YouTube', 'Google Sheets']
-    }
+  // the 4 projects featured on the homepage, pulled from the shared data source
+  // (order here controls display order — client work first, then personal builds)
+  const featuredTitles = [
+    'CleanCo Australia',
+    'tripitask.com landing page',
+    'AI news briefing bot',
+    'YouTube clip finder automation'
   ]
+  const featuredProjects = featuredTitles
+    .map(title => projects.find(project => project.title === title))
+    .filter(Boolean)
+  const featuredClientProjects = featuredProjects.filter(project => project.category !== 'automation')
+  const featuredPersonalProjects = featuredProjects.filter(project => project.category === 'automation')
 
   const services = [
     {
@@ -79,6 +61,10 @@ function Home() {
     }
   ]
 
+  // whether the terminal-session (skills/projects/services/github) animation
+  // has already played this tab session — used both as a ref (mount-time check
+  // inside effects) and to lazy-init state so revisits render already-finished
+  const terminalPlayed = () => sessionStorage.getItem('terminalAnimationPlayed') === 'true'
 
   //useState — hero
   const [lineIndex, setLineIndex] = useState(0)
@@ -94,30 +80,33 @@ function Home() {
   //useState — about teaser
   const [aboutVisible, setAboutVisible] = useState(false)
 
+  // same idea as heroAlreadyPlayedRef, but for the whole terminal-session block below
+  const terminalAlreadyPlayedRef = useRef(terminalPlayed())
+
   //useState — skills
-  const [terminalVisible, setTerminalVisible] = useState(false)
-  const [skillsCommandText, setSkillsCommandText] = useState('')
-  const [skillsCommandDone, setSkillsCommandDone] = useState(false)
-  const [skillsGridVisible, setSkillsGridVisible] = useState(false)
+  const [terminalVisible, setTerminalVisible] = useState(terminalPlayed)
+  const [skillsCommandText, setSkillsCommandText] = useState(() => (terminalPlayed() ? 'cat tech-stack.json' : ''))
+  const [skillsCommandDone, setSkillsCommandDone] = useState(terminalPlayed)
+  const [skillsGridVisible, setSkillsGridVisible] = useState(terminalPlayed)
 
   //useState — projects
-  const [projectsVisible, setProjectsVisible] = useState(false)
-  const [projectsCommandText, setProjectsCommandText] = useState('')
-  const [projectsCommandDone, setProjectsCommandDone] = useState(false)
-  const [projectsGridVisible, setProjectsGridVisible] = useState(false)
+  const [projectsVisible, setProjectsVisible] = useState(terminalPlayed)
+  const [projectsCommandText, setProjectsCommandText] = useState(() => (terminalPlayed() ? 'git log' : ''))
+  const [projectsCommandDone, setProjectsCommandDone] = useState(terminalPlayed)
+  const [projectsGridVisible, setProjectsGridVisible] = useState(terminalPlayed)
   const [selectedProject, setSelectedProject] = useState(null)
 
   //useState — services
-  const [servicesVisible, setServicesVisible] = useState(false)
-  const [servicesCommandText, setServicesCommandText] = useState('')
-  const [servicesCommandDone, setServicesCommandDone] = useState(false)
-  const [servicesGridVisible, setServicesGridVisible] = useState(false)
+  const [servicesVisible, setServicesVisible] = useState(terminalPlayed)
+  const [servicesCommandText, setServicesCommandText] = useState(() => (terminalPlayed() ? 'cat services.json' : ''))
+  const [servicesCommandDone, setServicesCommandDone] = useState(terminalPlayed)
+  const [servicesGridVisible, setServicesGridVisible] = useState(terminalPlayed)
 
   //useState — github (4th command, same pattern as the others)
-  const [githubVisible, setGithubVisible] = useState(false)
-  const [githubCommandText, setGithubCommandText] = useState('')
-  const [githubCommandDone, setGithubCommandDone] = useState(false)
-  const [githubGridVisible, setGithubGridVisible] = useState(false)
+  const [githubVisible, setGithubVisible] = useState(terminalPlayed)
+  const [githubCommandText, setGithubCommandText] = useState(() => (terminalPlayed() ? 'fetch github-activity.log' : ''))
+  const [githubCommandDone, setGithubCommandDone] = useState(terminalPlayed)
+  const [githubGridVisible, setGithubGridVisible] = useState(terminalPlayed)
 
   //useState — code editor line numbers
   const [lineCount, setLineCount] = useState(1)
@@ -130,7 +119,7 @@ function Home() {
 
   //useState — contact/note tabs
   const [contactTab, setContactTab] = useState('contact')
-  const [contactBoxVisible, setContactBoxVisible] = useState(false)
+  const [contactBoxVisible, setContactBoxVisible] = useState(terminalPlayed)
 
 
   // ── Hero typing animation — cycles through variable declaration styles
@@ -184,6 +173,8 @@ function Home() {
 
   // Terminal session — scroll trigger, kicks off Skills (the first command)
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return // already played this session — skip straight to finished state
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -202,6 +193,7 @@ function Home() {
 
   // Skills — command typing
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return // already have full text from lazy init — don't retype from scratch
     if (!terminalVisible) return
 
     const command = 'cat tech-stack.json'
@@ -222,6 +214,7 @@ function Home() {
 
   // Skills heading pops in first, grid drags in a beat after
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!skillsCommandDone) return
     const t = setTimeout(() => setSkillsGridVisible(true), 350)
     return () => clearTimeout(t)
@@ -231,6 +224,7 @@ function Home() {
   // the block to exist on screen (it can already be in view on short pages,
   // and IntersectionObserver can't tell "already visible" from "just scrolled to")
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!skillsGridVisible) return
 
     const scrollYAtFinish = window.scrollY
@@ -249,6 +243,7 @@ function Home() {
 
   // Projects — command typing
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!projectsVisible) return
 
     const command = 'git log'
@@ -269,6 +264,7 @@ function Home() {
 
   // Projects heading pops in first, grid drags in a beat after
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!projectsCommandDone) return
     const t = setTimeout(() => setProjectsGridVisible(true), 350)
     return () => clearTimeout(t)
@@ -277,6 +273,7 @@ function Home() {
   // Services — same fix: requires real additional scrolling past where the
   // user was when Projects finished, not just visibility
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!projectsGridVisible) return
 
     const scrollYAtFinish = window.scrollY
@@ -295,6 +292,7 @@ function Home() {
 
   // Services — command typing
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!servicesVisible) return
 
     const command = 'cat services.json'
@@ -315,6 +313,7 @@ function Home() {
 
   // Services heading pops in first, grid drags in a beat after
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!servicesCommandDone) return
     const t = setTimeout(() => setServicesGridVisible(true), 350)
     return () => clearTimeout(t)
@@ -323,6 +322,7 @@ function Home() {
   // GitHub — 4th command, same scroll-gate pattern as Projects/Services:
   // requires real additional scrolling past where the user was when Services finished
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!servicesGridVisible) return
 
     const scrollYAtFinish = window.scrollY
@@ -341,6 +341,7 @@ function Home() {
 
   // GitHub — command typing
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!githubVisible) return
 
     const command = 'fetch github-activity.log'
@@ -361,10 +362,21 @@ function Home() {
 
   // GitHub heading pops in first, output (the stats images) drags in a beat after
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!githubCommandDone) return
     const t = setTimeout(() => setGithubGridVisible(true), 350)
     return () => clearTimeout(t)
   }, [githubCommandDone])
+
+  // whole terminal-session sequence has now finished for real (github grid is the last
+  // step) — flag it so a future remount in this same tab skips straight to finished state.
+  // deliberately NOT set on mount like the hero flag: setting it here means someone who
+  // scrolls halfway, leaves, and comes back still gets the rest of the animation.
+  useEffect(() => {
+    if (githubGridVisible) {
+      sessionStorage.setItem('terminalAnimationPlayed', 'true')
+    }
+  }, [githubGridVisible])
 
   // line numbers grow to match the actual content height as it mounts
   useEffect(() => {
@@ -386,6 +398,7 @@ function Home() {
   // Depends on githubGridVisible since that's what mounts this section in the first place —
   // without it, the effect would run once on page load, before contactBoxRef even exists.
   useEffect(() => {
+    if (terminalAlreadyPlayedRef.current) return
     if (!githubGridVisible) return
 
     const observer = new IntersectionObserver(
@@ -588,20 +601,40 @@ function Home() {
 
                   {projectsGridVisible && (
                     <>
+                      <p className="code-comment">// client work</p>
                       <div className="projects-grid">
-                        {projects.map(project => (
+                        {featuredClientProjects.map(project => (
                           <div
-                            key={project.message}
+                            key={project.title}
                             className="project-card"
                             onClick={() => setSelectedProject(project)}
                           >
-                            <p className="project-title">{project.message}</p>
-                            <p className="project-desc">{project.shortDescription}</p>
+                            <p className="project-title">{project.title}</p>
+                            <p className="project-desc">
+                              {project.subtitle} <span className="project-view-hint">view details →</span>
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <p className="code-comment code-comment-spaced">// personal builds</p>
+                      <div className="projects-grid">
+                        {featuredPersonalProjects.map(project => (
+                          <div
+                            key={project.title}
+                            className="project-card"
+                            onClick={() => setSelectedProject(project)}
+                          >
+                            <p className="project-title">{project.title}</p>
+                            <p className="project-desc">
+                              {project.subtitle} <span className="project-view-hint">view details →</span>
+                            </p>
                           </div>
                         ))}
                       </div>
 
                       <p className="terminal-success">✓ 4 projects loaded successfully</p>
+                      <Link to="/projects" className="about-btn more-projects-btn">view all projects →</Link>
                     </>
                   )}
                 </div>
@@ -743,41 +776,8 @@ function Home() {
       </section>
       )}
 
+      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
 
-      {/* ── Project detail modal ── */}
-      {selectedProject && (
-        <div className="modal-overlay" onClick={() => setSelectedProject(null)}>
-          <div className="skill-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="terminal-bar">
-              <span className="dot red"></span>
-              <span className="dot yellow"></span>
-              <span className="dot green"></span>
-              <button className="modal-close" onClick={() => setSelectedProject(null)}>✕</button>
-            </div>
-            <div className="terminal-body">
-              <p className="skill-description-title">{selectedProject.message}</p>
-              <div className="detail-row">
-                <p className="detail-label">Role</p>
-                <p className="detail-text">{selectedProject.role}</p>
-              </div>
-              <div className="detail-row">
-                <p className="detail-label">Stack</p>
-                <p className="detail-text">{selectedProject.stack}</p>
-              </div>
-              <div className="detail-row">
-                <p className="detail-label">Note</p>
-                <p className="detail-text">{selectedProject.note}</p>
-              </div>
-              <p className="tags-label">Tags:</p>
-              <div className="project-tags">
-                {selectedProject.tags.map(tag => (
-                  <span key={tag} className="project-tag">{tag}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

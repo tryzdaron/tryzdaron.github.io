@@ -7,11 +7,14 @@ import Services from './pages/Services'
 import Footer from './components/Footer'
 import './App.css'
 import Navbar from './components/Navbar'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
   return (
     <HashRouter>
       <Navbar />
+      <ScrollToTop />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projects" element={<Projects />} />
