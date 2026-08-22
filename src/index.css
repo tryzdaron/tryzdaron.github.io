@@ -15,10 +15,44 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 40px;
-  background-color: #252526;
-  border-bottom: 1px solid #333333;
+  background-color: transparent;
   font-family: 'JetBrains Mono', monospace;
   z-index: 999;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease, width 0.3s ease, top 0.3s ease;
+}
+
+/* shared liquid-glass styling — applies once scrolled, regardless of variant */
+.navbar-glass {
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35), 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Variant A — full-width bar, sharp corners, matches the terminal-window aesthetic */
+.navbar-glass-a {
+  border-radius: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Variant B — floating pill, shorter + centered + fully rounded */
+.navbar-glass-b {
+  min-height: 52px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* pill only actually "floats" with margin once it's lifted into fixed position —
+   in normal flow (before crossing the hero) it just renders as a full-width
+   rounded bar, which is fine for this temp A/B comparison */
+.navbar-fixed.navbar-glass-b {
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 80px);
+  max-width: 1150px;
 }
 
 .navbar-fixed {
@@ -41,7 +75,9 @@
 
 .navbar-links {
   display: flex;
+  align-items: center;
   gap: 28px;
+  position: relative;
 }
 
 .navbar-link {
@@ -49,18 +85,27 @@
   text-decoration: none;
   font-size: 0.95rem;
   padding-bottom: 4px;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .navbar-link:hover {
-  color: #569CD6;
-  border-bottom-color: #569CD6;
+  color: #4EC9B0;
 }
 
 .navbar-link-active {
   color: #4EC9B0;
-  border-bottom-color: #4EC9B0;
+}
+
+/* single shared underline that slides between links via left/width transitions,
+   instead of each link drawing its own static border-bottom */
+.navbar-underline {
+  position: absolute;
+  bottom: -4px;
+  height: 2px;
+  background: linear-gradient(90deg, #4EC9B0, #569CD6);
+  border-radius: 2px;
+  transition: left 0.3s ease, width 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .navbar-hamburger {
@@ -145,4 +190,25 @@
 .footer-copyright {
   color: #808080;
   font-size: 0.8rem;
+}
+
+/* TEMP DEV TOOL — remove this whole block once Daron picks variant A or B */
+.navbar-variant-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: #1E1E1E;
+  border: 1px solid #4EC9B0;
+  color: #4EC9B0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.navbar-variant-toggle:hover {
+  background-color: #4EC9B0;
+  color: #1E1E1E;
 }
