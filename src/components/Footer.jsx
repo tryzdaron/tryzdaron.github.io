@@ -27,7 +27,7 @@ function Footer() {
   ]
 
   return (
-    <footer className="site-footer">
+    <footer className="site-footer footer-glass">
       <div className="footer-top">
         <div className="footer-nav">
           {navLinks.map(link => (

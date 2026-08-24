@@ -4,6 +4,7 @@ const services = [
     symbol: '</>',
     title: 'Web Development',
     description: 'Sites built on WordPress and Shopify, or fully custom-coded when a template can\'t do what you need.',
+    featured: true,
     details: [
       'WordPress builds using Oxygen Builder, ACF, and custom post types',
       'Shopify storefronts — theme customization or full custom builds',
@@ -17,6 +18,7 @@ const services = [
     symbol: '⚙',
     title: 'Automation & Workflows',
     description: 'Connecting your tools together so the repetitive parts of your business run themselves.',
+    featured: true,
     details: [
       'n8n workflows — from simple triggers to multi-step automations with conditional logic',
       'GoHighLevel setup and automation for agencies and service businesses',
@@ -30,6 +32,7 @@ const services = [
     symbol: '[SEO]',
     title: 'SEO',
     description: 'Helping sites get found — technical fixes and on-page work that actually move rankings.',
+    featured: true,
     details: [
       'On-page SEO — meta tags, heading structure, internal linking',
       'Technical SEO audits — site speed, mobile usability, crawlability',

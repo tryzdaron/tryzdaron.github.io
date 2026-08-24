@@ -2,11 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import avatar from '../assets/Images/avatar.jpg'
 import projects from '../data/projects'
+import allServices from '../data/services'
 import ProjectModal from '../components/ProjectModal'
+import './Home.css'
 
 function Home() {
 
-  //Hero — data + refs
   const codeLines = [
     'const name = "Tryz Daron Odasco";',
     'let name = "Tryz Daron Odasco";',
@@ -16,18 +17,12 @@ function Home() {
     'String name = "Tryz Daron Odasco";'
   ]
 
-  //About teaser — data + refs
   const aboutTeaserRef = useRef(null)
-
-  //Skills/Projects/Services/GitHub (code editor block) — data + refs
   const terminalRef = useRef(null)
   const codeContentRef = useRef(null)
-
-  //Contact/note tabs — data + refs
   const contactBoxRef = useRef(null)
 
-  // the 4 projects featured on the homepage, pulled from the shared data source
-  // (order here controls display order — client work first, then personal builds)
+  // 4 featured projects, client work first then personal builds
   const featuredTitles = [
     'CleanCo Australia',
     'tripitask.com landing page',
@@ -40,91 +35,57 @@ function Home() {
   const featuredClientProjects = featuredProjects.filter(project => project.category !== 'automation')
   const featuredPersonalProjects = featuredProjects.filter(project => project.category === 'automation')
 
-  const services = [
-    {
-      symbol: '</>',
-      title: 'Web Development',
-      description: 'WordPress, Shopify, and fully custom-coded sites',
-      link: '/contact?service=web-development'
-    },
-    {
-      symbol: '⚙',
-      title: 'Automation & Workflows',
-      description: 'n8n, GoHighLevel, Zapier, Make.com',
-      link: '/contact?service=automation'
-    },
-    {
-      symbol: '[SEO]',
-      title: 'SEO',
-      description: 'Helping sites get found and rank better',
-      link: '/contact?service=seo'
-    }
-  ]
+  const featuredServices = allServices.filter(service => service.featured)
 
-  // whether the terminal-session (skills/projects/services/github) animation
-  // has already played this tab session — used both as a ref (mount-time check
-  // inside effects) and to lazy-init state so revisits render already-finished
+  // don't replay the terminal typing animation if it already ran this tab
   const terminalPlayed = () => sessionStorage.getItem('terminalAnimationPlayed') === 'true'
 
-  //useState — hero
   const [lineIndex, setLineIndex] = useState(0)
   const [typedText, setTypedText] = useState(() =>
     sessionStorage.getItem('heroAnimationPlayed') === 'true' ? codeLines[0] : ''
   )
   const [deleting, setDeleting] = useState(false)
-  // snapshot taken once at mount — deciding whether THIS mount should animate at all.
-  // sessionStorage getting set to true later (by the effect below) must not retroactively
-  // stop an animation already running on this same mount, hence a ref, not a live re-check.
   const heroAlreadyPlayedRef = useRef(sessionStorage.getItem('heroAnimationPlayed') === 'true')
 
-  //useState — about teaser
   const [aboutVisible, setAboutVisible] = useState(false)
 
-  // same idea as heroAlreadyPlayedRef, but for the whole terminal-session block below
   const terminalAlreadyPlayedRef = useRef(terminalPlayed())
 
-  //useState — skills
   const [terminalVisible, setTerminalVisible] = useState(terminalPlayed)
   const [skillsCommandText, setSkillsCommandText] = useState(() => (terminalPlayed() ? 'cat tech-stack.json' : ''))
   const [skillsCommandDone, setSkillsCommandDone] = useState(terminalPlayed)
   const [skillsGridVisible, setSkillsGridVisible] = useState(terminalPlayed)
 
-  //useState — projects
   const [projectsVisible, setProjectsVisible] = useState(terminalPlayed)
   const [projectsCommandText, setProjectsCommandText] = useState(() => (terminalPlayed() ? 'git log' : ''))
   const [projectsCommandDone, setProjectsCommandDone] = useState(terminalPlayed)
   const [projectsGridVisible, setProjectsGridVisible] = useState(terminalPlayed)
   const [selectedProject, setSelectedProject] = useState(null)
 
-  //useState — services
   const [servicesVisible, setServicesVisible] = useState(terminalPlayed)
   const [servicesCommandText, setServicesCommandText] = useState(() => (terminalPlayed() ? 'cat services.json' : ''))
   const [servicesCommandDone, setServicesCommandDone] = useState(terminalPlayed)
   const [servicesGridVisible, setServicesGridVisible] = useState(terminalPlayed)
 
-  //useState — github (4th command, same pattern as the others)
   const [githubVisible, setGithubVisible] = useState(terminalPlayed)
   const [githubCommandText, setGithubCommandText] = useState(() => (terminalPlayed() ? 'fetch github-activity.log' : ''))
   const [githubCommandDone, setGithubCommandDone] = useState(terminalPlayed)
   const [githubGridVisible, setGithubGridVisible] = useState(terminalPlayed)
 
-  //useState — code editor line numbers
   const [lineCount, setLineCount] = useState(1)
 
-  //useState — anonymous note box
   const [noteText, setNoteText] = useState('')
   const [noteStatus, setNoteStatus] = useState('idle') // idle | sending | sent | error | spam | cooldown
   const [noteHoneypot, setNoteHoneypot] = useState('')
   const pageLoadTimeRef = useRef(Date.now())
 
-  //useState — contact/note tabs
   const [contactTab, setContactTab] = useState('contact')
   const [contactBoxVisible, setContactBoxVisible] = useState(terminalPlayed)
 
 
-  // ── Hero typing animation — cycles through variable declaration styles
+  // hero typing animation
   useEffect(() => {
-    if (heroAlreadyPlayedRef.current) return // already played earlier this session — stay on the static finished text
+    if (heroAlreadyPlayedRef.current) return
 
     const currentLine = codeLines[lineIndex]
     let timer
@@ -147,13 +108,11 @@ function Home() {
     return () => clearTimeout(timer)
   }, [typedText, deleting, lineIndex])
 
-  // marks the animation as played for the rest of this browser tab/session,
-  // so navigating away and back skips straight to the finished state
   useEffect(() => {
     sessionStorage.setItem('heroAnimationPlayed', 'true')
   }, [])
 
-  // About teaser — scroll trigger (simple fade, no typing)
+  // about teaser fade in on scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -171,9 +130,9 @@ function Home() {
     return () => observer.disconnect()
   }, [])
 
-  // Terminal session — scroll trigger, kicks off Skills (the first command)
+  // kicks off skills once the terminal block scrolls into view
   useEffect(() => {
-    if (terminalAlreadyPlayedRef.current) return // already played this session — skip straight to finished state
+    if (terminalAlreadyPlayedRef.current) return
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -191,9 +150,9 @@ function Home() {
     return () => observer.disconnect()
   }, [])
 
-  // Skills — command typing
+  // skills command typing
   useEffect(() => {
-    if (terminalAlreadyPlayedRef.current) return // already have full text from lazy init — don't retype from scratch
+    if (terminalAlreadyPlayedRef.current) return
     if (!terminalVisible) return
 
     const command = 'cat tech-stack.json'
@@ -212,7 +171,6 @@ function Home() {
     return () => clearInterval(typing)
   }, [terminalVisible])
 
-  // Skills heading pops in first, grid drags in a beat after
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!skillsCommandDone) return
@@ -220,9 +178,7 @@ function Home() {
     return () => clearTimeout(t)
   }, [skillsCommandDone])
 
-  // Projects — waits for the user to actually scroll further, not just for
-  // the block to exist on screen (it can already be in view on short pages,
-  // and IntersectionObserver can't tell "already visible" from "just scrolled to")
+  // waits for actual scroll, not just visibility, so it doesn't fire instantly on short pages
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!skillsGridVisible) return
@@ -241,7 +197,7 @@ function Home() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [skillsGridVisible])
 
-  // Projects — command typing
+  // projects command typing
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!projectsVisible) return
@@ -262,7 +218,6 @@ function Home() {
     return () => clearInterval(typing)
   }, [projectsVisible])
 
-  // Projects heading pops in first, grid drags in a beat after
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!projectsCommandDone) return
@@ -270,8 +225,6 @@ function Home() {
     return () => clearTimeout(t)
   }, [projectsCommandDone])
 
-  // Services — same fix: requires real additional scrolling past where the
-  // user was when Projects finished, not just visibility
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!projectsGridVisible) return
@@ -290,7 +243,7 @@ function Home() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [projectsGridVisible])
 
-  // Services — command typing
+  // services command typing
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!servicesVisible) return
@@ -311,7 +264,6 @@ function Home() {
     return () => clearInterval(typing)
   }, [servicesVisible])
 
-  // Services heading pops in first, grid drags in a beat after
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!servicesCommandDone) return
@@ -319,8 +271,6 @@ function Home() {
     return () => clearTimeout(t)
   }, [servicesCommandDone])
 
-  // GitHub — 4th command, same scroll-gate pattern as Projects/Services:
-  // requires real additional scrolling past where the user was when Services finished
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!servicesGridVisible) return
@@ -339,7 +289,7 @@ function Home() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [servicesGridVisible])
 
-  // GitHub — command typing
+  // github command typing
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!githubVisible) return
@@ -360,7 +310,6 @@ function Home() {
     return () => clearInterval(typing)
   }, [githubVisible])
 
-  // GitHub heading pops in first, output (the stats images) drags in a beat after
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!githubCommandDone) return
@@ -368,21 +317,18 @@ function Home() {
     return () => clearTimeout(t)
   }, [githubCommandDone])
 
-  // whole terminal-session sequence has now finished for real (github grid is the last
-  // step) — flag it so a future remount in this same tab skips straight to finished state.
-  // deliberately NOT set on mount like the hero flag: setting it here means someone who
-  // scrolls halfway, leaves, and comes back still gets the rest of the animation.
+  // whole sequence finished, skip straight to the end next time
   useEffect(() => {
     if (githubGridVisible) {
       sessionStorage.setItem('terminalAnimationPlayed', 'true')
     }
   }, [githubGridVisible])
 
-  // line numbers grow to match the actual content height as it mounts
+  // line numbers grow with the actual content height
   useEffect(() => {
     if (!codeContentRef.current) return
 
-    const lineHeightPx = 28.8 // matches .line-numbers' line-height: 1.8rem
+    const lineHeightPx = 28.8
 
     const resizeObserver = new ResizeObserver(([entry]) => {
       const height = entry.contentRect.height
@@ -394,9 +340,7 @@ function Home() {
     return () => resizeObserver.disconnect()
   }, [])
 
-  // Contact box — scroll trigger, so its inner lines only stagger-animate once it's actually scrolled into view.
-  // Depends on githubGridVisible since that's what mounts this section in the first place —
-  // without it, the effect would run once on page load, before contactBoxRef even exists.
+  // contact box lines stagger in once scrolled into view
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!githubGridVisible) return
@@ -417,30 +361,24 @@ function Home() {
     return () => observer.disconnect()
   }, [githubGridVisible])
 
-  // sends the anonymous note to n8n, with an invisible reCAPTCHA v3 token attached.
-  // NOTE: replace YOUR_RECAPTCHA_SITE_KEY and the webhook URL below, and add
-  // <script src="https://www.google.com/recaptcha/api.js?render=YOUR_RECAPTCHA_SITE_KEY"></script>
-  // to index.html — reCAPTCHA v3 has no visible widget, it just needs the script loaded once.
+  // sends the anonymous note to n8n with a recaptcha token attached
+  // still needs the real site key + webhook URL swapped in, and the recaptcha
+  // script added to index.html
   const handleNoteSubmit = async (e) => {
     e.preventDefault()
     if (!noteText.trim() || noteStatus === 'sending') return
 
-    // honeypot — real people never fill this, bots usually fill every field they find
     if (noteHoneypot) {
-      // pretend it worked so the bot doesn't learn it got caught
       setNoteStatus('sent')
       setNoteText('')
       return
     }
 
-    // most spam scripts submit within milliseconds of the page loading —
-    // a real person takes at least a few seconds to read and type
     if (Date.now() - pageLoadTimeRef.current < 4000) {
       setNoteStatus('error')
       return
     }
 
-    // simple cooldown so the same visitor can't fire off notes back-to-back
     const lastSent = sessionStorage.getItem('note_last_sent')
     if (lastSent && Date.now() - Number(lastSent) < 5 * 60 * 1000) {
       setNoteStatus('cooldown')
@@ -472,7 +410,7 @@ function Home() {
   return (
     <div className="home">
 
-      {/* ── Hero ── */}
+      {/* Hero */}
       <section className="hero">
         <div className="hero-right">
           <div className="terminal">
@@ -502,7 +440,7 @@ function Home() {
       </section>
 
 
-      {/* ── About teaser ── */}
+      {/* About teaser */}
       <section
         id="about-teaser"
         className={`about-teaser ${aboutVisible ? 'about-teaser-visible' : ''}`}
@@ -520,7 +458,7 @@ function Home() {
       </section>
 
 
-      {/* skills/projects/services/github (merged) */}
+      {/* skills/projects/services/github */}
       <section
         id="terminal-session"
         className={`terminal-session ${terminalVisible ? 'terminal-session-visible' : ''}`}
@@ -540,7 +478,7 @@ function Home() {
 
             <div className="code-editor-content" ref={codeContentRef}>
 
-              {/* Skills — command 1, kicked off by the container's own observer above */}
+              {/* Skills */}
               <div className="terminal-block">
                 <p className="command-line">
                   <span className="prompt">PS C:\Users&gt;</span> {skillsCommandText}
@@ -587,7 +525,7 @@ function Home() {
                 )}
               </div>
 
-              {/* Projects — command 2, mounts once Skills' grid has actually appeared, not just once the command finished typing */}
+              {/* Projects */}
               {skillsGridVisible && (
                 <div className="terminal-block">
                   <p className="command-line">
@@ -640,7 +578,7 @@ function Home() {
                 </div>
               )}
 
-              {/* Services — command 3, mounts once Projects' grid has actually appeared, not just once the command finished typing */}
+              {/* Services */}
               {projectsGridVisible && (
                 <div className="terminal-block">
                   <p className="command-line">
@@ -655,7 +593,7 @@ function Home() {
                   {servicesGridVisible && (
                     <>
                       <div className="skills-grid">
-                        {services.map(service => (
+                        {featuredServices.map(service => (
                           <div key={service.title} className="skill-card service-card">
                             <p className="service-symbol">{service.symbol}</p>
                             <p className="json-key">{service.title}</p>
@@ -672,7 +610,7 @@ function Home() {
                 </div>
               )}
 
-              {/* GitHub — command 4, mounts once Services' grid has actually appeared, not just once the command finished typing */}
+              {/* GitHub */}
               {servicesGridVisible && (
                 <div className="terminal-block">
                   <p className="command-line">
@@ -709,7 +647,7 @@ function Home() {
       </section>
 
 
-      {/* ── Contact / note tabs — waits until everything above (including GitHub) has finished ── */}
+      {/* Contact / note tabs */}
       {githubGridVisible && (
       <section className="contact-banner">
         <div
@@ -745,7 +683,6 @@ function Home() {
             <div className="contact-panel">
               <p className="note-subtext">fully anonymous — no name, no email, just say what's on your mind</p>
               <form onSubmit={handleNoteSubmit}>
-                {/* honeypot — hidden from real users via CSS, bots tend to fill it anyway */}
                 <input
                   type="text"
                   name="company"

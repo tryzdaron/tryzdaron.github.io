@@ -1,3 +1,4 @@
+import './Contact.css'
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import projects from '../data/projects'
@@ -65,10 +66,35 @@ function Contact() {
   const [message, setMessage] = useState('')
   const [formStatus, setFormStatus] = useState('idle') // idle | sending | sent | error
 
-  const [noteOpen, setNoteOpen] = useState(false)
+  const [showAnonymousNote, setShowAnonymousNote] = useState(false)
   const [anonNote, setAnonNote] = useState('')
   const [anonStatus, setAnonStatus] = useState('idle') // idle | sending | sent | error
 
+  // 90° flip on the form card when switching modes. isRotated drives the CSS
+  // transform; isAnimating just blocks re-clicking mid-animation. The card is
+  // edge-on (invisible) at 90°, which is the moment we actually swap which
+  // form is in the DOM — only one form ever exists at a time, so the card
+  // still auto-sizes to whichever one is showing, no fixed-height hack needed.
+  // The two setTimeout delays (150ms each) must match .contact-form-card's
+  // CSS transition duration in index.css/App.css — keep them in sync if you
+  // change one.
+  const [isRotated, setIsRotated] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  const handleToggleAnonymous = () => {
+    if (isAnimating) return
+    setIsAnimating(true)
+    setIsRotated(true)
+
+    setTimeout(() => {
+      setShowAnonymousNote(prev => !prev)
+      setIsRotated(false)
+
+      setTimeout(() => {
+        setIsAnimating(false)
+      }, 150)
+    }, 150)
+  }
   // holds a preview snapshot while the confirm modal is open — { type: 'contact' | 'note', data }
   const [confirmModal, setConfirmModal] = useState(null)
 
@@ -131,73 +157,18 @@ function Contact() {
       <div className="contact-page-columns">
 
         {/* ── Left column — form ── */}
-        <div className="contact-form-card">
-          <form onSubmit={handleReviewContact}>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-            <input
-              type="email"
-              className="form-input"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <select
-              className="form-input"
-              value={service}
-              onChange={(e) => setService(e.target.value)}
-              required
-            >
-              <option value="" disabled>Select a service</option>
-              {services.map(s => (
-                <option key={s.value} value={s.value}>{s.title}</option>
-              ))}
-            </select>
-            <textarea
-              className="note-textarea"
-              placeholder="Tell me about your project..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              rows={5}
-              required
-            />
-            <button type="submit" className="about-btn" disabled={formStatus === 'sending'}>
-              {formStatus === 'sending' ? 'sending...' : 'send message →'}
-            </button>
-          </form>
-
-          {formStatus === 'sent' && (
-            <p className="note-status note-status-success">✓ got it — I'll get back to you soon.</p>
-          )}
-          {formStatus === 'error' && (
-            <p className="note-status note-status-error">something went wrong, try again.</p>
-          )}
-
-          <div className="contact-note-toggle-wrap">
-            <button
-              type="button"
-              className="contact-note-toggle"
-              onClick={() => setNoteOpen(!noteOpen)}
-            >
-              &gt; optional: leave an anonymous note
-            </button>
-
-            {noteOpen && (
-              <div className="contact-note-reveal">
+        <div className="contact-form-card-wrap">
+          <div className={`contact-form-card ${isRotated ? 'contact-form-card-flipped' : ''}`}>
+            {showAnonymousNote ? (
+              <>
+                <p className="note-subtext">fully anonymous — no name, no email, just say what's on your mind</p>
                 <form onSubmit={handleReviewNote}>
                   <textarea
                     className="note-textarea"
                     placeholder="type here..."
                     value={anonNote}
                     onChange={(e) => setAnonNote(e.target.value)}
-                    rows={4}
+                    rows={5}
                     maxLength={500}
                     required
                   />
@@ -205,14 +176,76 @@ function Contact() {
                     {anonStatus === 'sending' ? 'sending...' : 'send note →'}
                   </button>
                 </form>
+
                 {anonStatus === 'sent' && (
                   <p className="note-status note-status-success">✓ sent, thanks.</p>
                 )}
                 {anonStatus === 'error' && (
                   <p className="note-status note-status-error">something went wrong, try again.</p>
                 )}
-              </div>
+              </>
+            ) : (
+              <>
+                <form onSubmit={handleReviewContact}>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Full Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                  <input
+                    type="email"
+                    className="form-input"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                  <select
+                    className="form-input"
+                    value={service}
+                    onChange={(e) => setService(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>Select a service</option>
+                    {services.map(s => (
+                      <option key={s.value} value={s.value}>{s.title}</option>
+                    ))}
+                  </select>
+                  <textarea
+                    className="note-textarea"
+                    placeholder="Tell me about your project..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    rows={5}
+                    required
+                  />
+                  <button type="submit" className="about-btn" disabled={formStatus === 'sending'}>
+                    {formStatus === 'sending' ? 'sending...' : 'send message →'}
+                  </button>
+                </form>
+
+                {formStatus === 'sent' && (
+                  <p className="note-status note-status-success">✓ got it — I'll get back to you soon.</p>
+                )}
+                {formStatus === 'error' && (
+                  <p className="note-status note-status-error">something went wrong, try again.</p>
+                )}
+              </>
             )}
+
+            <div className="contact-note-toggle-wrap">
+              <button
+                type="button"
+                className="contact-note-toggle"
+                onClick={handleToggleAnonymous}
+                disabled={isAnimating}
+              >
+                {showAnonymousNote ? '> back to contact.sh' : '> optional: leave an anonymous note'}
+              </button>
+            </div>
           </div>
         </div>
 

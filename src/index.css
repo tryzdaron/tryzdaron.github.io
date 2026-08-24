@@ -1,13 +1,94 @@
-@media (min-width: 1440px) {
-  .hero {
-    max-width: 1400px;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  .skills,
-  .projects {
-    max-width: 1100px;
+
+/* ── Animations ───────────────────────────────────────── */
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(8px);
   }
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes fadeDropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ── Base ─────────────────────────────────────────────── */
+
+body {
+  background-color: #1E1E1E;
+  background-image: radial-gradient(circle, #3a3a3a 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #D4D4D4;
+  background-position: center;
+}
+
+html, body, #root {
+  min-height: 100vh;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+}
+
+.home {
+  min-height: 100vh;
+}
+
+
+/* ── Navbar ───────────────────────────────────────────── */
 
 .navbar {
   position: relative;
@@ -18,41 +99,28 @@
   background-color: transparent;
   font-family: 'JetBrains Mono', monospace;
   z-index: 999;
-  transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease, width 0.3s ease, top 0.3s ease;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
 }
 
-/* shared liquid-glass styling — applies once scrolled, regardless of variant */
 .navbar-glass {
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  background: rgba(255, 255, 255, 0.07);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35), 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Variant A — full-width bar, sharp corners, matches the terminal-window aesthetic */
+.navbar-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  backdrop-filter: blur(30px) saturate(300%);
+  -webkit-backdrop-filter: blur(30px) saturate(300%);
+  background: rgba(255, 255, 255, 0.06);
+  mask-image: linear-gradient(to bottom, black 0%, rgba(0, 0, 0, 0.4) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, rgba(0, 0, 0, 0.4) 100%);
+}
+
 .navbar-glass-a {
   border-radius: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-/* Variant B — floating pill, shorter + centered + fully rounded */
-.navbar-glass-b {
-  min-height: 52px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-/* pill only actually "floats" with margin once it's lifted into fixed position —
-   in normal flow (before crossing the hero) it just renders as a full-width
-   rounded bar, which is fine for this temp A/B comparison */
-.navbar-fixed.navbar-glass-b {
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 80px);
-  max-width: 1150px;
 }
 
 .navbar-fixed {
@@ -96,8 +164,6 @@
   color: #4EC9B0;
 }
 
-/* single shared underline that slides between links via left/width transitions,
-   instead of each link drawing its own static border-bottom */
 .navbar-underline {
   position: absolute;
   bottom: -4px;
@@ -138,18 +204,65 @@
   }
 }
 
+
+/* ── Footer ───────────────────────────────────────────── */
+
 .site-footer {
-  text-align: center;
-  padding: 48px 20px;
-  border-top: 1px solid #333333;
-  background-color: #191919;
+  padding: 60px 20px 45px;
+  background-color: transparent;
+  position: relative;
+}
+
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, #1E1E1E);
+  pointer-events: none;
+}
+
+.footer-glass {
+  border-top: 1px solid #1a1a1a;
+  background: linear-gradient(
+    to bottom,
+    hsla(0, 0%, 11%, 0.1) 0%,
+    hsla(0, 0%, 10%, 0.4) 5%,
+    hsla(0, 0%, 4%, 0.92) 60%,
+    #000000 100%
+  );
+}
+
+.footer-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  backdrop-filter: blur(0px) saturate(300%);
+  -webkit-backdrop-filter: blur(0px) saturate(300%);
+  mask-image: linear-gradient(to bottom, black 0%, transparent 40%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 40%);
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 0px 24px 24px;
+  border-bottom: 1px solid #333333;
 }
 
 .footer-nav {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 12px 24px;
 }
 
 .footer-nav-link {
@@ -164,11 +277,9 @@
 }
 
 .footer-socials {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
   gap: 16px;
-  margin-bottom: 20px;
 }
 
 .footer-social-link {
@@ -181,34 +292,29 @@
   color: #4EC9B0;
 }
 
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+}
+
 .footer-line {
   color: #6A9955;
-  font-size: 0.9rem;
-  margin-bottom: 16px;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
 }
 
 .footer-copyright {
-  color: #808080;
-  font-size: 0.8rem;
-}
-
-/* TEMP DEV TOOL — remove this whole block once Daron picks variant A or B */
-.navbar-variant-toggle {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000;
-  background-color: #1E1E1E;
-  border: 1px solid #4EC9B0;
-  color: #4EC9B0;
-  font-family: 'JetBrains Mono', monospace;
+  color: #6A6A6A;
   font-size: 0.75rem;
-  padding: 8px 14px;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
-.navbar-variant-toggle:hover {
-  background-color: #4EC9B0;
-  color: #1E1E1E;
+@media (max-width: 600px) {
+  .footer-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-nav {
+    grid-template-columns: repeat(2, auto);
+  }
 }
