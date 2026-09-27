@@ -1,7 +1,7 @@
-import './Services.css'
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import services from '../data/services'
+import './Services.css'
 
 // hardcode only this — the FAQ answer computes elapsed time live via JS Date
 const FREELANCE_START = new Date('2025-09-01')
@@ -20,9 +20,6 @@ function getFreelanceDuration() {
   return parts.join(', ')
 }
 
-// merged from this page's original FAQ + Contact page's FAQ, deduped —
-// "small jobs" and "outside the Philippines" each had near-duplicate versions
-// on both pages, kept as one combined answer here
 const faqs = [
   {
     question: 'How do you price a project?',
@@ -64,7 +61,6 @@ function Services() {
   const [ctaVisible, setCtaVisible] = useState(false)
   const [openFaqIndex, setOpenFaqIndex] = useState(null)
 
-  // freelancing-duration FAQ is computed here, not hardcoded, then appended last
   const allFaqs = [
     ...faqs,
     {
@@ -73,7 +69,6 @@ function Services() {
     }
   ]
 
-  // service cards — stagger in once the group scrolls into view
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -86,7 +81,6 @@ function Services() {
     return () => observer.disconnect()
   }, [])
 
-  // faq items — stagger in once the group scrolls into view
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -99,7 +93,6 @@ function Services() {
     return () => observer.disconnect()
   }, [])
 
-  // bottom CTA — simple fade up, same as About teaser on Home
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {

@@ -5,8 +5,8 @@
 // actually aiming for, not just restate the status.
 const projects = [
   {
-    title: 'Tagaytay tourist SEO site',
-    subtitle: 'SEO-focused site covering Tagaytay tourist destinations',
+    title: 'Cavite guide tourist SEO site',
+    subtitle: 'SEO-focused site covering Cavite tourist destinations',
     category: 'websites',
     status: 'in-progress',
     outcome: 'Targeting first page rank for local search terms',

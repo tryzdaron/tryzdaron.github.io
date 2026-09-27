@@ -1,7 +1,7 @@
-import './Projects.css'
 import { useState } from 'react'
 import projects from '../data/projects'
 import ProjectModal from '../components/ProjectModal'
+import './Projects.css'
 
 const categoryOrder = ['websites', 'database', 'automation']
 
@@ -14,10 +14,6 @@ const categoryLabels = {
 function Projects() {
   const [selectedProject, setSelectedProject] = useState(null)
 
-  // running counter across the WHOLE list, not reset per category — this is what
-  // makes cards stagger continuously top-to-bottom instead of each category's
-  // nth-child restarting from 1 (which made every group replay the same 0.1s→0.5s
-  // sequence instead of picking up where the previous group left off)
   let rowIndex = 0
 
   return (
@@ -31,8 +27,6 @@ function Projects() {
         const items = projects.filter(project => project.category === category)
         if (items.length === 0) return null
 
-        // label fades in at the same moment as this group's first card, instead of
-        // showing instantly while the cards below it are still mid-animation
         const groupDelay = 0.1 + rowIndex * 0.15
 
         return (

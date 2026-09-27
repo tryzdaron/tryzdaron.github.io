@@ -452,7 +452,7 @@ function Home() {
         </div>
         <div className="about-content">
           <p className="about-narrative">
-            Self-taught web developer and automation specialist based in the Philippines. I build websites and automate the boring parts — WordPress, Shopify, n8n workflows. Past year, that's meant real client work, and teaching myself React through this very site.
+            Self-taught web developer and automation specialist based in the Philippines. I build websites, automate repetitive work, and work with tools like WordPress, Shopify, and n8n. I’ve spent the past year working with real clients while continuing to learn and build — including this site, my first React project.
           </p>
         </div>
       </section>
@@ -513,7 +513,7 @@ function Home() {
                       <div className="skill-card">
                         <p className="json-key">"activelyLearning"</p>
                         <div className="tag-row">
-                          {['SEO', 'SalesForce', 'TypeScript', '3D Printing'].map(skill => (
+                          {['SEO', 'SalesForce', 'TypeScript', '3D Printing', 'Video Editing'].map(skill => (
                             <span key={skill} className="tag-pill learn">{skill}</span>
                           ))}
                         </div>
@@ -630,8 +630,8 @@ function Home() {
                         alt="GitHub stats"
                       />
                       <img
-                        className="github-stats-img"
-                        src="https://github-readme-activity-graph.vercel.app/graph?username=tryzdaron&theme=react-dark&bg_color=252526&color=4EC9B0&line=569CD6&point=D4D4D4&border=333333"
+                        className="github-stats-img github-graph-img"
+                        src="https://github-readme-activity-graph-gamma-sooty.vercel.app/graph?username=tryzdaron&theme=react-dark&bg_color=252526&color=4EC9B0&line=569CD6&point=D4D4D4&border=333333"
                         alt="GitHub contribution activity graph"
                       />
 

@@ -1,34 +1,22 @@
-import './Contact.css'
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import projects from '../data/projects'
 import siteStatus from '../data/siteStatus'
 import services from '../data/services'
+import './Contact.css'
 
-// ── placeholder backend calls — swap these out, the state logic above them doesn't change ──
-
-// TODO: replace with a real webhook/API call once the backend is built
 async function sendToBackend(data) {
   return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 1200))
 }
 
-// TODO: replace with a real Groq moderation call (hate speech / threats / explicit content).
-// Applies to BOTH the contact form message and the anonymous note — anonymous notes get
-// held to a stricter standard. Flagged content goes to a private "needs review" holding
-// area, never deleted outright. For now everything passes.
 async function checkContent(message) {
   return 'pass'
 }
 
-// TODO: replace with real reCAPTCHA v3 + IP-based Supabase rate limiting (~3/day per IP).
-// Only runs on the anonymous note path — the "get in touch" form doesn't need this since
-// it's not anonymous. For now everything is allowed.
 async function checkRateLimit() {
   return 'allowed'
 }
 
-// shared submit flow for both forms — isAnonymous gates the rate-limit check,
-// checkContent always runs before anything is actually sent
 async function submitForm(data, { isAnonymous } = {}) {
   if (isAnonymous) {
     const rateLimitResult = await checkRateLimit()
@@ -53,8 +41,6 @@ async function submitForm(data, { isAnonymous } = {}) {
 function Contact() {
   const [searchParams] = useSearchParams()
 
-  // pre-fill from ?service= query param (set by Services/Home "get started →" links),
-  // but only if it actually matches a real option — still fully editable after
   const initialService = (() => {
     const param = searchParams.get('service')
     return services.some(service => service.value === param) ? param : ''
@@ -64,20 +50,12 @@ function Contact() {
   const [email, setEmail] = useState('')
   const [service, setService] = useState(initialService)
   const [message, setMessage] = useState('')
-  const [formStatus, setFormStatus] = useState('idle') // idle | sending | sent | error
+  const [formStatus, setFormStatus] = useState('idle')
 
   const [showAnonymousNote, setShowAnonymousNote] = useState(false)
   const [anonNote, setAnonNote] = useState('')
-  const [anonStatus, setAnonStatus] = useState('idle') // idle | sending | sent | error
+  const [anonStatus, setAnonStatus] = useState('idle')
 
-  // 90° flip on the form card when switching modes. isRotated drives the CSS
-  // transform; isAnimating just blocks re-clicking mid-animation. The card is
-  // edge-on (invisible) at 90°, which is the moment we actually swap which
-  // form is in the DOM — only one form ever exists at a time, so the card
-  // still auto-sizes to whichever one is showing, no fixed-height hack needed.
-  // The two setTimeout delays (150ms each) must match .contact-form-card's
-  // CSS transition duration in index.css/App.css — keep them in sync if you
-  // change one.
   const [isRotated, setIsRotated] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
 
@@ -95,14 +73,11 @@ function Contact() {
       }, 150)
     }, 150)
   }
-  // holds a preview snapshot while the confirm modal is open — { type: 'contact' | 'note', data }
+
   const [confirmModal, setConfirmModal] = useState(null)
 
-  // pulled from the shared project data, not hardcoded — whichever project
-  // is currently marked in-progress shows up here automatically
   const currentProject = projects.find(project => project.status === 'in-progress')
 
-  // both forms open the confirm modal first — neither submits directly on click
   const handleReviewContact = (e) => {
     e.preventDefault()
     setConfirmModal({ type: 'contact', data: { name, email, service, message } })
@@ -156,7 +131,6 @@ function Contact() {
 
       <div className="contact-page-columns">
 
-        {/* ── Left column — form ── */}
         <div className="contact-form-card-wrap">
           <div className={`contact-form-card ${isRotated ? 'contact-form-card-flipped' : ''}`}>
             {showAnonymousNote ? (
@@ -249,7 +223,6 @@ function Contact() {
           </div>
         </div>
 
-        {/* ── Right column — status ── */}
         <div className="contact-side-column">
           <div className="contact-status-card">
             <p className="command-line">
@@ -269,7 +242,6 @@ function Contact() {
 
       </div>
 
-      {/* ── Confirm-before-send modal — shared by both forms ── */}
       {confirmModal && (
         <div className="modal-overlay" onClick={handleCancelConfirm}>
           <div className="confirm-modal" onClick={(e) => e.stopPropagation()}>
