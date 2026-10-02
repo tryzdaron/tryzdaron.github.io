@@ -5,6 +5,7 @@ import projects from '../data/projects'
 import allServices from '../data/services'
 import ProjectModal from '../components/ProjectModal'
 import './Home.css'
+import { submitContactForm } from '../lib/api'
 
 function Home() {
 
@@ -387,22 +388,14 @@ function Home() {
 
     setNoteStatus('sending')
 
-    try {
-      const token = await window.grecaptcha.execute('YOUR_RECAPTCHA_SITE_KEY', { action: 'submit_note' })
-
-      const res = await fetch('https://YOUR-N8N-INSTANCE/webhook/anonymous-note', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: noteText, recaptchaToken: token })
-      })
-
-      if (!res.ok) throw new Error('submit failed')
+          try {
+      await submitContactForm({ type: 'note', message: noteText, honeypot: noteHoneypot })
 
       sessionStorage.setItem('note_last_sent', String(Date.now()))
       setNoteStatus('sent')
       setNoteText('')
     } catch (err) {
-      setNoteStatus('error')
+        setNoteStatus(err.message === 'rate_limited' ? 'limited' : 'error')
     }
   }
 
@@ -707,6 +700,7 @@ function Home() {
               {noteStatus === 'sent' && <p className="note-status note-status-success">✓ sent, thanks.</p>}
               {noteStatus === 'error' && <p className="note-status note-status-error">something went wrong, try again.</p>}
               {noteStatus === 'cooldown' && <p className="note-status note-status-error">you already sent a note recently — try again in a bit.</p>}
+              {noteStatus === 'limited' && <p className="note-status note-status-error">you've hit the limit of 3 messages per day — try again later.</p>}
             </div>
           )}
         </div>

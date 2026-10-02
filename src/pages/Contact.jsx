@@ -1,42 +1,10 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import projects from '../data/projects'
 import siteStatus from '../data/siteStatus'
 import services from '../data/services'
+import { submitContactForm } from '../lib/api'
 import './Contact.css'
-
-async function sendToBackend(data) {
-  return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 1200))
-}
-
-async function checkContent(message) {
-  return 'pass'
-}
-
-async function checkRateLimit() {
-  return 'allowed'
-}
-
-async function submitForm(data, { isAnonymous } = {}) {
-  if (isAnonymous) {
-    const rateLimitResult = await checkRateLimit()
-    if (rateLimitResult !== 'allowed') {
-      throw new Error('rate-limited')
-    }
-  }
-
-  const moderationResult = await checkContent(data.message)
-  if (moderationResult !== 'pass') {
-    throw new Error('flagged')
-  }
-
-  const result = await sendToBackend(data)
-  if (!result.ok) {
-    throw new Error('send-failed')
-  }
-
-  return result
-}
 
 function Contact() {
   const [searchParams] = useSearchParams()
@@ -51,10 +19,15 @@ function Contact() {
   const [service, setService] = useState(initialService)
   const [message, setMessage] = useState('')
   const [formStatus, setFormStatus] = useState('idle')
+  const [contactHoneypot, setContactHoneypot] = useState('')
 
   const [showAnonymousNote, setShowAnonymousNote] = useState(false)
   const [anonNote, setAnonNote] = useState('')
   const [anonStatus, setAnonStatus] = useState('idle')
+  const [anonHoneypot, setAnonHoneypot] = useState('')
+
+  // same 4-second minimum time-on-page check Home's note form uses
+  const pageLoadTimeRef = useRef(Date.now())
 
   const [isRotated, setIsRotated] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
@@ -96,25 +69,46 @@ function Contact() {
     setConfirmModal(null)
 
     if (type === 'contact') {
+      if (Date.now() - pageLoadTimeRef.current < 4000) {
+        setFormStatus('error')
+        return
+      }
+
       setFormStatus('sending')
       try {
-        await submitForm({ name: data.name, email: data.email, service: data.service, message: data.message }, { isAnonymous: false })
+        await submitContactForm({
+          type: 'contact',
+          name: data.name,
+          email: data.email,
+          service_type: data.service,
+          message: data.message,
+          honeypot: contactHoneypot
+        })
         setFormStatus('sent')
         setName('')
         setEmail('')
         setService('')
         setMessage('')
       } catch (err) {
-        setFormStatus('error')
+           setFormStatus(err.message === 'rate_limited' ? 'limited' : 'error')
       }
     } else {
+      if (Date.now() - pageLoadTimeRef.current < 4000) {
+        setAnonStatus('error')
+        return
+      }
+
       setAnonStatus('sending')
       try {
-        await submitForm({ message: data.anonNote }, { isAnonymous: true })
+        await submitContactForm({
+          type: 'note',
+          message: data.anonNote,
+          honeypot: anonHoneypot
+        })
         setAnonStatus('sent')
         setAnonNote('')
       } catch (err) {
-        setAnonStatus('error')
+          setAnonStatus(err.message === 'rate_limited' ? 'limited' : 'error')
       }
     }
   }
@@ -137,6 +131,15 @@ function Contact() {
               <>
                 <p className="note-subtext">fully anonymous — no name, no email, just say what's on your mind</p>
                 <form onSubmit={handleReviewNote}>
+                  <input
+                    type="text"
+                    name="website"
+                    className="note-honeypot"
+                    value={anonHoneypot}
+                    onChange={(e) => setAnonHoneypot(e.target.value)}
+                    tabIndex="-1"
+                    autoComplete="off"
+                  />
                   <textarea
                     className="note-textarea"
                     placeholder="type here..."
@@ -157,10 +160,22 @@ function Contact() {
                 {anonStatus === 'error' && (
                   <p className="note-status note-status-error">something went wrong, try again.</p>
                 )}
+                {anonStatus === 'limited' && (
+                     <p className="note-status note-status-error">you've hit the limit of 3 messages per day — try again later.</p>
+                )}
               </>
             ) : (
               <>
                 <form onSubmit={handleReviewContact}>
+                  <input
+                    type="text"
+                    name="website"
+                    className="note-honeypot"
+                    value={contactHoneypot}
+                    onChange={(e) => setContactHoneypot(e.target.value)}
+                    tabIndex="-1"
+                    autoComplete="off"
+                  />
                   <input
                     type="text"
                     className="form-input"
@@ -206,6 +221,9 @@ function Contact() {
                 )}
                 {formStatus === 'error' && (
                   <p className="note-status note-status-error">something went wrong, try again.</p>
+                )}
+                {formStatus === 'limited' && (
+                     <p className="note-status note-status-error">you've hit the limit of 3 messages per day — try again later.</p>
                 )}
               </>
             )}
