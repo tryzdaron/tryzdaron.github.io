@@ -10,9 +10,9 @@ const projects = [
     category: 'websites',
     status: 'in-progress',
     outcome: 'Targeting first page rank for local search terms',
-    role: 'TBD',
-    note: 'Details still being worked out',
-    tags: ['SEO', 'WordPress']
+    role: 'Building the site and its local SEO setup',
+    note: 'Work in progress',
+    tags: ['SEO', 'Tailwindcss', 'Hardcoded']
   },
   {
     title: 'tripitask.com landing page',
@@ -69,7 +69,7 @@ const projects = [
     subtitle: 'AI tool that finds standout moments in long videos',
     category: 'automation',
     status: 'finished',
-    outcome: 'Built for his own YouTube automation channel',
+    outcome: 'Built for my own YouTube automation channel',
     role: 'Built a tool that scans long YouTube videos and picks out the most interesting short clips using AI',
     note: 'Personal project',
     tags: ['n8n', 'Supadata API', 'Groq LLM', 'Google Sheets']

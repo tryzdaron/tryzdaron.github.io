@@ -29,14 +29,6 @@ export const motorcycles = [
     current: false,
     caption: 'Caption coming soon',
     photos: []
-  },
-  {
-    id: 'sniper-155',
-    name: 'Sniper 155',
-    current: false,
-    separate: true, // shown set apart from the main upgrade path — tied to a past accident, framing not final
-    caption: 'Caption coming soon — this bike is tied to a past accident, final framing not yet decided',
-    photos: []
   }
 ]
 

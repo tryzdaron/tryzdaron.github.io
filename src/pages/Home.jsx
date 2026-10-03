@@ -363,8 +363,6 @@ function Home() {
   }, [githubGridVisible])
 
   // sends the anonymous note to n8n with a recaptcha token attached
-  // still needs the real site key + webhook URL swapped in, and the recaptcha
-  // script added to index.html
   const handleNoteSubmit = async (e) => {
     e.preventDefault()
     if (!noteText.trim() || noteStatus === 'sending') return
