@@ -1,0 +1,29 @@
+.projects-page {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: left;
+}
+
+.projects-page-group {
+  margin-bottom: 20px;
+}
+
+.project-row-status {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+}
+
+.project-outcome {
+  font-size: 0.8rem;
+  margin-top: 6px;
+}
+
+.project-outcome-done {
+  color: #4EC9B0;
+}
+
+.project-outcome-progress {
+  color: #FFBD2E;
+}
