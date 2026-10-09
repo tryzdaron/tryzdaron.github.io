@@ -1,7 +1,6 @@
-import { useState } from 'react'
 import projects from '../data/projects'
-import ProjectModal from '../components/ProjectModal'
 import './Projects.css'
+import ProjectCard from '../components/ProjectCard'
 
 const categoryOrder = ['websites', 'database', 'automation']
 
@@ -12,7 +11,6 @@ const categoryLabels = {
 }
 
 function Projects() {
-  const [selectedProject, setSelectedProject] = useState(null)
 
   let rowIndex = 0
 
@@ -43,23 +41,7 @@ function Projects() {
                 rowIndex++
 
                 return (
-                  <div
-                    key={project.title}
-                    className="project-card"
-                    style={{ animationDelay: `${delay}s` }}
-                    onClick={() => setSelectedProject(project)}
-                  >
-                    {project.status !== 'finished' && (
-                      <span className="status-pill project-row-status">in progress</span>
-                    )}
-                    <p className="project-title">{project.title}</p>
-                    <p className="project-desc">
-                      {project.subtitle} <span className="project-view-hint">view details →</span>
-                    </p>
-                    <p className={`project-outcome ${project.status === 'finished' ? 'project-outcome-done' : 'project-outcome-progress'}`}>
-                      {project.outcome}
-                    </p>
-                  </div>
+                  <ProjectCard key={project.title} project={project} delay={delay} />
                 )
               })}
             </div>
@@ -69,7 +51,6 @@ function Projects() {
 
       <p className="terminal-success">✓ {projects.length} projects loaded successfully</p>
 
-      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import avatar from '../assets/Images/avatar.jpg'
 import projects from '../data/projects'
 import allServices from '../data/services'
-import ProjectModal from '../components/ProjectModal'
+import ProjectCard from '../components/ProjectCard'
 import './Home.css'
 import { submitContactForm } from '../lib/api'
 
@@ -61,7 +61,6 @@ function Home() {
   const [projectsCommandText, setProjectsCommandText] = useState(() => (terminalPlayed() ? 'git log' : ''))
   const [projectsCommandDone, setProjectsCommandDone] = useState(terminalPlayed)
   const [projectsGridVisible, setProjectsGridVisible] = useState(terminalPlayed)
-  const [selectedProject, setSelectedProject] = useState(null)
 
   const [servicesVisible, setServicesVisible] = useState(terminalPlayed)
   const [servicesCommandText, setServicesCommandText] = useState(() => (terminalPlayed() ? 'cat services.json' : ''))
@@ -533,33 +532,15 @@ function Home() {
                       <p className="code-comment">// client work</p>
                       <div className="projects-grid">
                         {featuredClientProjects.map(project => (
-                          <div
-                            key={project.title}
-                            className="project-card"
-                            onClick={() => setSelectedProject(project)}
-                          >
-                            <p className="project-title">{project.title}</p>
-                            <p className="project-desc">
-                              {project.subtitle} <span className="project-view-hint">view details →</span>
-                            </p>
-                          </div>
+                          <ProjectCard key={project.title} project={project} />
                         ))}
                       </div>
 
                       <p className="code-comment code-comment-spaced">// personal builds</p>
                       <div className="projects-grid">
-                        {featuredPersonalProjects.map(project => (
-                          <div
-                            key={project.title}
-                            className="project-card"
-                            onClick={() => setSelectedProject(project)}
-                          >
-                            <p className="project-title">{project.title}</p>
-                            <p className="project-desc">
-                              {project.subtitle} <span className="project-view-hint">view details →</span>
-                            </p>
-                          </div>
-                        ))}
+                          {featuredPersonalProjects.map(project => (
+                            <ProjectCard key={project.title} project={project} />
+                          ))}
                       </div>
 
                       <p className="terminal-success">✓ 4 projects loaded successfully</p>
@@ -704,8 +685,6 @@ function Home() {
         </div>
       </section>
       )}
-
-      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
 
     </div>
   )

@@ -19,8 +19,7 @@ function Navbar() {
     { label: 'Contact', path: '/contact' }
   ]
 
-  // position:fixed only kicks in once scrolled past the hero — kept exactly
-  // as before, independent of the glass effect below
+
   useEffect(() => {
     const heroHeight = document.querySelector('.hero')?.offsetHeight || 0
 
@@ -33,8 +32,6 @@ function Navbar() {
     return () => window.removeEventListener('scroll', handlePastHero)
   }, [location.pathname])
 
-  // measures the currently-active link and moves the shared underline under it —
-  // driven by the route, not click state — untouched from before
   const positionUnderline = () => {
     const activeLink = linkRefs.current[location.pathname]
     const container = navLinksRef.current

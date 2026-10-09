@@ -76,7 +76,7 @@
   border-left: 2px solid #569CD6;
   border-radius: 0 6px 6px 0;
   padding: 12px 16px;
-  cursor: pointer;
+  cursor: default;
   opacity: 0;
   position: relative;
   animation: fadeDropIn 0.4s ease forwards;
@@ -93,6 +93,91 @@
   background-color: #2a2a2b;
   transform: translateY(-6px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* paste this right under .project-card:hover in the file that has .project-card */
+
+.project-card-open:hover {
+  transform: none;
+}
+
+.project-card-head {
+  cursor: pointer;
+}
+
+.project-card-head:focus-visible {
+  outline: 1px solid #569CD6;
+  outline-offset: 4px;
+}
+
+.project-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.project-arrow-open {
+  transform: rotate(90deg);
+}
+
+.project-details {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.project-details-open {
+  grid-template-rows: 1fr;
+}
+
+.project-details-inner {
+  overflow: hidden;
+}
+
+.project-details-body {
+  border-top: 1px solid #333333;
+  margin-top: 12px;
+  padding-top: 12px;
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+.project-commit {
+  color: #FFBD2E;
+}
+
+.project-commit-head {
+  color: #4EC9B0;
+}
+
+.project-line {
+  margin-top: 6px;
+  color: #D4D4D4;
+}
+
+.project-line-label {
+  color: #569CD6;
+}
+
+.project-visit-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #4EC9B0;
+  text-decoration: none;
+}
+
+.project-visit-link:hover {
+  text-decoration: underline;
+}
+
+.project-details-body .project-tags {
+  margin-top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-details,
+  .project-arrow {
+    transition: none;
+  }
 }
 
 .project-title {
