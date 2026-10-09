@@ -471,7 +471,7 @@ function Home() {
               {/* Skills */}
               <div className="terminal-block">
                 <p className="command-line">
-                  <span className="prompt">PS C:\Users&gt;</span> {skillsCommandText}
+                  <span className="prompt">PS C:\Users&gt;</span>{skillsCommandText}
                   {!skillsCommandDone && <span className="cursor">|</span>}
                 </p>
 
@@ -519,7 +519,7 @@ function Home() {
               {skillsGridVisible && (
                 <div className="terminal-block">
                   <p className="command-line">
-                    <span className="prompt">PS C:\Users&gt;</span> {projectsCommandText}
+                    <span className="prompt">PS C:\Users&gt;</span>{projectsCommandText}
                     {!projectsCommandDone && <span className="cursor">|</span>}
                   </p>
 
@@ -554,7 +554,7 @@ function Home() {
               {projectsGridVisible && (
                 <div className="terminal-block">
                   <p className="command-line">
-                    <span className="prompt">PS C:\Users&gt;</span> {servicesCommandText}
+                    <span className="prompt">PS C:\Users&gt;</span>{servicesCommandText}
                     {!servicesCommandDone && <span className="cursor">|</span>}
                   </p>
 
@@ -586,7 +586,7 @@ function Home() {
               {servicesGridVisible && (
                 <div className="terminal-block">
                   <p className="command-line">
-                    <span className="prompt">PS C:\Users&gt;</span> {githubCommandText}
+                    <span className="prompt">PS C:\Users&gt;</span>{githubCommandText}
                     {!githubCommandDone && <span className="cursor">|</span>}
                   </p>
 
