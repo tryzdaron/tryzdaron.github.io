@@ -2,6 +2,15 @@ import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { IconMenu2, IconX } from '@tabler/icons-react'
 
+function TerminalIcon() {
+  return (
+    <svg className="tab-icon" viewBox="0 0 16 16" aria-hidden="true">
+      <rect width="16" height="16" rx="3" fill="currentColor" />
+      <path d="M4.5 5l3.5 3-3.5 3M9 11.5h3" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 function Navbar() {
   const location = useLocation()
   const [isPastHero, setIsPastHero] = useState(false)
@@ -72,11 +81,11 @@ function Navbar() {
             ref={(el) => { linkRefs.current[link.path] = el }}
             className={({ isActive }) => `navbar-link ${isActive ? 'navbar-link-active' : ''}`}
           >
-            {link.label}
+            <TerminalIcon />{link.label}
           </NavLink>
         ))}
         <span
-          className="navbar-underline"
+          className="navbar-tab-fill"
           style={{
             left: `${underlineStyle.left}px`,
             width: `${underlineStyle.width}px`,
@@ -98,7 +107,7 @@ function Navbar() {
               className={({ isActive }) => `navbar-link ${isActive ? 'navbar-link-active' : ''}`}
               onClick={() => setMenuOpen(false)}
             >
-              {link.label}
+              <TerminalIcon />{link.label}
             </NavLink>
           ))}
         </div>
