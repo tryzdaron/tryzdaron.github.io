@@ -1,5 +1,4 @@
-const allImages = import.meta.glob('../assets/images/**/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' })
-
+const allImages = import.meta.glob('../assets/Images/**/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' })
 // grabs every photo whose file name starts with the id, in name order
 const getPhotos = (id) =>
   Object.entries(allImages)
