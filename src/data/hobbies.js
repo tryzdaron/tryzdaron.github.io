@@ -1,83 +1,89 @@
-// photos are placeholders for now — drop real files in src/assets/images/<category>/
-// and swap each item's `photos` array from [] to real imported paths once ready
+const allImages = import.meta.glob('../assets/images/**/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' })
+
+// grabs every photo whose file name starts with the id, in name order
+const getPhotos = (id) =>
+  Object.entries(allImages)
+    .filter(([path]) => {
+      const file = path.split('/').pop()
+      return file.startsWith(`${id}-`) || file.startsWith(`${id}.`)
+    })
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, url]) => url)
 
 export const motorcycles = [
   {
     id: 'airblade-160',
     name: 'Airblade 160',
     current: true,
-    caption: 'Caption coming soon',
-    photos: []
+    caption: 'My current bike. I bought it second-hand and have already modified a lot of its parts. It’s perfect for me in every way, and I think this is the one that stays with me the longest.',
+    photos: [getPhotos('airblade-160')]
   },
   {
     id: 'click-160',
     name: 'Click 160',
     current: false,
-    caption: 'Caption coming soon',
-    photos: []
+    caption: 'I bought this one second-hand, and it wasn’t long before someone else bought it. I only rode it for about a week. Too bad, because I really loved this bike.',
+    photos: [getPhotos('click-160')]
   },
   {
     id: 'nmax-155',
     name: 'NMAX 155',
     current: false,
-    caption: 'Caption coming soon',
-    photos: []
+    caption: 'This one isn’t actually mine, but I used it for a very long time to get around. It’s where I learned how maintenance differs between motorcycle brands.',
+    photos: [getPhotos('nmax-155')]
   },
   {
     id: 'click-125',
     name: 'Click 125',
     current: false,
-    caption: 'Caption coming soon',
-    photos: []
+    caption: 'This is where it all began. My first bike, It’s where I learned how to ride, and how to fix and diagnose the basic stuff myself',
+    photos: [getPhotos('click-125')]
   }
 ]
 
 export const bicycles = [
   {
-    id: 'metal-frame-bike',
-    name: 'Metal Frame Bike',
-    noPhoto: true,
-    caption: 'Caption coming soon',
-    photos: []
-  },
-  {
-    id: 'modified-bmx',
-    name: 'Modified BMX',
-    noPhoto: true,
-    caption: 'Caption coming soon',
-    photos: []
-  },
-  {
-    id: 'japanese-bike',
-    name: 'Japanese Bike',
-    noPhoto: true,
-    caption: 'Caption coming soon',
-    photos: []
-  },
-  {
-    id: 'fourth-bike',
-    name: '4th Bike',
-    caption: 'Caption coming soon',
-    photos: []
-  },
-  {
-    id: 'mountain-bike',
-    name: 'Mountain Bike',
-    caption: 'Caption coming soon',
-    photos: []
+    id: 'gravel-bike',
+    name: 'Gravel Bike',
+    current: true,
+    caption: 'I bought this one to complete my setup since I already had a mountain bike and a road bike. It was almost brand new, and I got it for a really good price. My friend ended up wanting it, so I sold it to him pretty much right away without changing anything on it. He later decided to upgrade most of the bike, and I did that work for him too.',
+    photos: [getPhotos('gravel-bike')]
   },
   {
     id: 'road-bike',
     name: 'Road Bike',
-    caption: 'Caption coming soon',
-    photos: []
+    caption: 'This is my all-time favorite bike. I found it on Marketplace and ended up changing almost everything on it myself. I rode it everywhere, and it stayed with me longer than any other bike Ive owned. After leaving it unused for about a year, I eventually sold it to my cousin. It was harder to let go of than I expected, considering how much time and memories I had with it.',
+    photos: [getPhotos('road-bike')]
   },
   {
-    id: 'gravel-bike',
-    name: 'Gravel Bike',
-    current: true,
-    caption: 'Caption coming soon',
-    photos: []
+    id: 'mountain-bike',
+    name: 'Mountain Bike',
+    caption: 'I bought a Spanker 29er on Facebook Marketplace after selling my folding bike. Almost everything on it got replaced over time, so it ended up being more my build than the original. Eventually I gave it to my dad.',
+    photos: [getPhotos('mountain-bike')]
+  },
+  {
+    id: 'folding-mountain-bike',
+    name: 'Folding Mountain Bike',
+    caption: 'My mom bought this bike for me, and its where my love for cycling really started. It was a 26er, though I ended up putting a 29er fork on it. This was also the bike I learned to do my own maintenance on and started messing around with different parts. I even rode it to Tagaytay twice. It was a pretty heavy metal bike though, so I eventually sold it to get something better.',
+    photos: [getPhotos('folding-bike')]
+  },
+  {
+    id: 'japanese-bike',
+    name: 'Japanese Bike',
+    caption: 'My Aunt gave me this one along with the mini mountain bike, but it was actually meant for my father. It was huge, about as big as I was back then, but I used it a lot, even to get to school when the mini mountain bike was broken. Sadly, it got stolen.',
+    photos: [getPhotos('japanese-bike')]
+  },
+  {
+    id: 'mini-mountain-bike',
+    name: 'Mini Mountain Bike',
+    caption: 'My Aunt gave me this one for Christmas. The shifter was broken, so it was stuck in one gear, but I rode it everywhere in Grade 7: friends’ houses, the river, everywhere. It sat unused for so long that I ended up selling it to a junkshop.',
+    photos: [getPhotos('mini-mountain-bike')]
+  },
+  {
+    id: 'bmx',
+    name: 'BMX',
+    caption: 'My first bike. It was my father’s old bike, and he gave it to me. Sadly, it got stolen.',
+    photos: [getPhotos('bmx')]
   }
 ]
 

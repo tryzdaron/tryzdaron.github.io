@@ -1,13 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
-import { IconChevronDown } from '@tabler/icons-react'
+import { IconChevronDown, IconX } from '@tabler/icons-react'
 import {
   motorcycles,
   bicycles,
-  swimmingPhotos,
   sceneryPhotos,
   gamingPhoto,
   hobbyBackstories,
-  swimmingCaption,
   gamingCaption,
   sceneryCaption
 } from '../data/hobbies'
@@ -15,22 +13,18 @@ import unlistedSkills from '../data/unlistedSkills'
 import { fetchSpotifyStats } from '../data/spotify'
 import './About.css'
 
-const hobbyTabs = [
-  { id: 'motorcycle', label: 'motorcycle.md' },
-  { id: 'cycling', label: 'cycling.md' },
-  { id: 'swimming', label: 'swimming.md' },
-  { id: 'gaming', label: 'gaming.md' },
-  { id: 'scenery', label: 'scenery.md' }
-]
+// text inside the README tab
+const hobbyIntro = "When I'm not building websites, I'm out riding, playing games, or looking for a view worth stopping for."
+const hobbyHint = 'Pick a file from the explorer to open it.'
 
 // ms per character — edit each independently since command lengths vary a lot
-const whoamiTypingSpeed = 35
-const spotifyTypingSpeed = 20
-const hobbiesTypingSpeed = 60
-const skillsTypingSpeed = 35
+const whoamiTypingSpeed = 20
+const spotifyTypingSpeed = 15
+const hobbiesTypingSpeed = 35
+const skillsTypingSpeed = 15
 
 const sectionRevealDelay = 80 // brief pause after typing finishes, before content pops in
-const sectionGapDelay = 550 // pause after content reveals, before the next command starts typing
+const sectionGapDelay = 250 // pause after content reveals, before the next command starts typing
 
 const ACCENT_COLORS = {
   blue: '#569CD6',
@@ -42,66 +36,248 @@ const BORDER_TRACE_DURATION = 550 // ms — card border sweep
 const PANEL_TRANSITION_DURATION = 400 // ms — panel height expand/collapse
 const CARD_CORNER_RADIUS = 8 // must match the <rect> rx/ry below — used to get the real path length right
 
-// generic photo slot — shows a real image once `photo` is set, otherwise a labeled placeholder
-function PhotoSlot({ photo, alt, tall }) {
-  if (photo) {
-    return <img className={`hobby-photo ${tall ? 'hobby-photo-tall' : ''}`} src={photo} alt={alt} />
+// the two folders in the explorer tree
+const vehicleFolders = [
+  { id: 'motorcycle', items: motorcycles, backstory: hobbyBackstories.motorcycle },
+  { id: 'cycling', items: bicycles, backstory: hobbyBackstories.cycling }
+]
+
+// every tab you can open, flat. photo file names come from each entry's id
+const hobbyFiles = [
+  { id: 'readme', name: 'README.md', folder: null, kind: 'readme', photos: [] },
+  ...vehicleFolders.flatMap(folder => [
+    // clicking a folder opens its description as a tab
+    { id: folder.id, name: folder.id, folder: null, kind: 'folder', text: folder.backstory, photos: [] },
+    ...folder.items.map(item => ({
+      id: `${folder.id}/${item.id}`,
+      name: `${item.id}.jpg`,
+      folder: folder.id,
+      kind: 'photo',
+      text: item.caption,
+      photos: item.photos || [],
+      noPhoto: item.noPhoto
+    }))
+  ]),
+  {
+    id: 'gaming',
+    name: 'gaming.jpg',
+    folder: null,
+    kind: 'photo',
+    text: gamingCaption,
+    photos: gamingPhoto.photo ? [gamingPhoto.photo] : []
+  },
+  {
+    id: 'scenery',
+    name: 'scenery.jpg',
+    folder: null,
+    kind: 'photo',
+    text: sceneryCaption,
+    photos: sceneryPhotos.map(item => item.photo).filter(Boolean)
   }
-  return (
-    <div className={`hobby-photo hobby-photo-placeholder ${tall ? 'hobby-photo-tall' : ''}`}>
-      <span>📷 photo placeholder</span>
-    </div>
+]
+
+// the whole "Life Outside the Code" box — tree on the left, tabs + viewer on the right
+function HobbyExplorer() {
+  const [openTabs, setOpenTabs] = useState(['readme'])
+  const [activeFileId, setActiveFileId] = useState('readme')
+  const [openFolders, setOpenFolders] = useState({ motorcycle: false, cycling: false })
+  const [photoIndex, setPhotoIndex] = useState(0)
+  const [mobileTreeOpen, setMobileTreeOpen] = useState(false)
+
+  const tabBarRef = useRef(null)
+  const tabRefs = useRef({})
+
+  const activeFile = hobbyFiles.find(file => file.id === activeFileId) || null
+  const photos = activeFile ? activeFile.photos : []
+  const currentPhoto = photos[photoIndex] || null
+
+  // opens a tab, or just jumps to it if it's already open
+  const showTab = (fileId) => {
+    setOpenTabs(tabs => (tabs.includes(fileId) ? tabs : [...tabs, fileId]))
+    setActiveFileId(fileId)
+    setPhotoIndex(0)
+  }
+
+  const openFile = (fileId) => {
+    showTab(fileId)
+    setMobileTreeOpen(false)
+  }
+
+  const switchTab = (fileId) => {
+    setActiveFileId(fileId)
+    setPhotoIndex(0)
+  }
+
+  const closeTab = (event, fileId) => {
+    event.stopPropagation()
+    const index = openTabs.indexOf(fileId)
+    const remaining = openTabs.filter(id => id !== fileId)
+    setOpenTabs(remaining)
+
+    // closing the active tab jumps to the one next to it
+    if (fileId === activeFileId) {
+      setActiveFileId(remaining[index] || remaining[index - 1] || null)
+      setPhotoIndex(0)
+    }
+  }
+
+  // expanding a folder also opens its description, collapsing just collapses
+  const toggleFolder = (folderId) => {
+    const willOpen = !openFolders[folderId]
+    setOpenFolders(prev => ({ ...prev, [folderId]: willOpen }))
+    if (willOpen) showTab(folderId)
+  }
+
+  // keeps the active tab visible when the tab bar scrolls sideways
+  useEffect(() => {
+    const bar = tabBarRef.current
+    const tab = tabRefs.current[activeFileId]
+    if (!bar || !tab) return
+
+    const tabLeft = tab.offsetLeft
+    const tabRight = tabLeft + tab.offsetWidth
+
+    if (tabLeft < bar.scrollLeft) {
+      bar.scrollLeft = tabLeft
+    } else if (tabRight > bar.scrollLeft + bar.clientWidth) {
+      bar.scrollLeft = tabRight - bar.clientWidth
+    }
+  }, [activeFileId, openTabs.length])
+
+  const renderFileButton = (file, extraClass = '') => (
+    <button
+      key={file.id}
+      type="button"
+      className={`explorer-file ${extraClass} ${file.id === activeFileId ? 'explorer-file-active' : ''} ${file.noPhoto ? 'explorer-file-dimmed' : ''}`}
+      onClick={() => openFile(file.id)}
+    >
+      {file.name}
+    </button>
   )
-}
 
-// shared layout for the motorcycle/cycling tabs — backstory, divider, list + photo panel
-function VehicleHobby({ items, backstory, selectedId, onSelect, photoIndex, onPhotoIndex }) {
-  const selected = items.find(item => item.id === selectedId) || items[0]
-  const photos = selected.photos || []
-  const activePhoto = photos[photoIndex] || null
+  const phonePath = activeFile
+    ? (activeFile.folder ? `${activeFile.folder} / ${activeFile.name}` : activeFile.name)
+    : 'pick a file'
 
   return (
-    <div className="hobby-panel">
-      <p className="hobby-backstory">{backstory}</p>
-      <div className="hobby-divider"></div>
-      <div className="hobby-columns">
-        <div className="hobby-list">
-          {items.map(item => (
-            <div key={item.id}>
-              {item.separate && <div className="hobby-list-separator"></div>}
-              <button
-                type="button"
-                className={`hobby-list-item ${item.id === selected.id ? 'hobby-list-item-active' : ''} ${item.current ? 'hobby-list-item-current' : ''} ${item.noPhoto ? 'hobby-list-item-dimmed' : ''} ${item.separate ? 'hobby-list-item-separate' : ''}`}
-                onClick={() => {
-                  onSelect(item.id)
-                  onPhotoIndex(0)
-                }}
+    <div className="explorer">
+
+      <button
+        type="button"
+        className="explorer-mobile-bar"
+        onClick={() => setMobileTreeOpen(open => !open)}
+      >
+        <span>{phonePath}</span>
+        <IconChevronDown
+          size={16}
+          className={`explorer-chevron ${mobileTreeOpen ? '' : 'explorer-chevron-closed'}`}
+        />
+      </button>
+
+      <div className={`explorer-tree ${mobileTreeOpen ? 'explorer-tree-open' : ''}`}>
+        {renderFileButton(hobbyFiles.find(file => file.id === 'readme'))}
+
+        {vehicleFolders.map(folder => (
+          <div key={folder.id}>
+            <button
+              type="button"
+              className={`explorer-folder ${folder.id === activeFileId ? 'explorer-folder-active' : ''}`}
+              onClick={() => toggleFolder(folder.id)}
+            >
+              <IconChevronDown
+                size={14}
+                className={`explorer-chevron ${openFolders[folder.id] ? '' : 'explorer-chevron-closed'}`}
+              />
+              {folder.id}
+            </button>
+            {openFolders[folder.id] &&
+              hobbyFiles
+                .filter(file => file.folder === folder.id)
+                .map(file => renderFileButton(file, 'explorer-file-nested'))}
+          </div>
+        ))}
+
+        {hobbyFiles
+          .filter(file => file.kind === 'photo' && !file.folder)
+          .map(file => renderFileButton(file))}
+      </div>
+
+      <div className="explorer-main">
+        <div className="explorer-tabs" ref={tabBarRef}>
+          {openTabs.map(fileId => {
+            const file = hobbyFiles.find(f => f.id === fileId)
+            if (!file) return null
+            return (
+              <div
+                key={fileId}
+                ref={(el) => { tabRefs.current[fileId] = el }}
+                className={`explorer-tab ${fileId === activeFileId ? 'explorer-tab-active' : ''}`}
               >
-                {item.name}
-                {item.noPhoto && <span className="hobby-no-photo-label"> (no photo)</span>}
-              </button>
-            </div>
-          ))}
+                <button type="button" className="explorer-tab-name" onClick={() => switchTab(fileId)}>
+                  {file.name}
+                </button>
+                <button
+                  type="button"
+                  className="explorer-tab-close"
+                  onClick={(event) => closeTab(event, fileId)}
+                  aria-label={`close ${file.name}`}
+                >
+                  <IconX size={12} />
+                </button>
+              </div>
+            )
+          })}
         </div>
 
-        <div className="hobby-photo-panel">
-          <PhotoSlot photo={activePhoto} alt={selected.name} tall />
-          {photos.length > 1 && (
-            <div className="hobby-thumb-strip">
-              {photos.map((photo, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className={`hobby-thumb ${i === photoIndex ? 'hobby-thumb-active' : ''}`}
-                  onClick={() => onPhotoIndex(i)}
-                >
-                  <img src={photo} alt={`${selected.name} ${i + 1}`} />
-                </button>
-              ))}
-            </div>
-          )}
-          <p className="hobby-photo-caption">{selected.caption}</p>
-        </div>
+        {activeFile && (
+          <div className="explorer-viewer" key={activeFile.id}>
+            <p className="explorer-crumb">
+              {activeFile.folder ? `${activeFile.folder} / ` : ''}{activeFile.name}
+            </p>
+
+            {activeFile.kind === 'readme' && (
+              <p className="explorer-readme-text">
+                {hobbyIntro} <span className="explorer-hint">{hobbyHint}</span>
+              </p>
+            )}
+
+            {activeFile.kind === 'folder' && (
+              <p className="explorer-readme-text">{activeFile.text}</p>
+            )}
+
+            {activeFile.kind === 'photo' && (
+              <>
+                <div className={`explorer-stage ${currentPhoto ? '' : 'explorer-stage-empty'}`}>
+                  {currentPhoto ? (
+                    <>
+                      <img className="explorer-stage-blur" src={currentPhoto} alt="" aria-hidden="true" />
+                      <img className="explorer-stage-photo" src={currentPhoto} alt={activeFile.name} />
+                    </>
+                  ) : (
+                    <span>{activeFile.noPhoto ? 'no photo of this one' : '📷 photo placeholder'}</span>
+                  )}
+                </div>
+
+                {photos.length > 1 && (
+                  <div className="explorer-thumbs">
+                    {photos.map((photo, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        className={`explorer-thumb ${i === photoIndex ? 'explorer-thumb-active' : ''}`}
+                        onClick={() => setPhotoIndex(i)}
+                      >
+                        <img src={photo} alt={`${activeFile.name} ${i + 1}`} />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <p className="explorer-caption">{activeFile.text}</p>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -239,17 +415,6 @@ function SkillCard({ skill, isOpen, onToggle }) {
 }
 
 function About() {
-  const [activeHobbyTab, setActiveHobbyTab] = useState('motorcycle')
-
-  const [selectedMotorcycle, setSelectedMotorcycle] = useState(motorcycles[0].id)
-  const [motorcyclePhotoIndex, setMotorcyclePhotoIndex] = useState(0)
-
-  const [selectedBicycle, setSelectedBicycle] = useState(bicycles.find(b => b.current)?.id || bicycles[0].id)
-  const [bicyclePhotoIndex, setBicyclePhotoIndex] = useState(0)
-
-  const [swimPhotoIndex, setSwimPhotoIndex] = useState(0)
-  const [sceneryPhotoIndex, setSceneryPhotoIndex] = useState(0)
-
   const [expandedSkillId, setExpandedSkillId] = useState(null)
   const expandedSkill = unlistedSkills.find(s => s.id === expandedSkillId) || null
 
@@ -615,96 +780,7 @@ function About() {
               {hobbiesVisible && (
                 <>
                   <h2 className="section-heading">Life Outside the Code</h2>
-
-                  <div className="hobbies-tabs">
-                    {hobbyTabs.map(tab => (
-                      <button
-                        key={tab.id}
-                        type="button"
-                        className={`hobby-tab ${activeHobbyTab === tab.id ? 'hobby-tab-active' : ''}`}
-                        onClick={() => setActiveHobbyTab(tab.id)}
-                      >
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  {activeHobbyTab === 'motorcycle' && (
-                    <VehicleHobby
-                      items={motorcycles}
-                      backstory={hobbyBackstories.motorcycle}
-                      selectedId={selectedMotorcycle}
-                      onSelect={setSelectedMotorcycle}
-                      photoIndex={motorcyclePhotoIndex}
-                      onPhotoIndex={setMotorcyclePhotoIndex}
-                    />
-                  )}
-
-                  {activeHobbyTab === 'cycling' && (
-                    <VehicleHobby
-                      items={bicycles}
-                      backstory={hobbyBackstories.cycling}
-                      selectedId={selectedBicycle}
-                      onSelect={setSelectedBicycle}
-                      photoIndex={bicyclePhotoIndex}
-                      onPhotoIndex={setBicyclePhotoIndex}
-                    />
-                  )}
-
-                  {activeHobbyTab === 'swimming' && (
-                    <div className="hobby-panel">
-                      <p className="hobby-backstory">{swimmingCaption}</p>
-                      <div className="swim-gallery">
-                        <div className="swim-main-photo-wrap">
-                          <PhotoSlot photo={swimmingPhotos[swimPhotoIndex]?.photo} alt="Swimming" tall />
-                          <span className="swim-location-tag">{swimmingPhotos[swimPhotoIndex]?.location}</span>
-                        </div>
-                        <div className="hobby-thumb-strip">
-                          {swimmingPhotos.map((item, i) => (
-                            <button
-                              key={item.id}
-                              type="button"
-                              className={`hobby-thumb ${i === swimPhotoIndex ? 'hobby-thumb-active' : ''}`}
-                              onClick={() => setSwimPhotoIndex(i)}
-                            >
-                              {item.photo ? <img src={item.photo} alt={`Swim ${i + 1}`} /> : <span>📷</span>}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeHobbyTab === 'gaming' && (
-                    <div className="hobby-panel">
-                      <div className="gaming-panel">
-                        <PhotoSlot photo={gamingPhoto.photo} alt="Gaming" tall />
-                        <p className="hobby-backstory">{gamingCaption}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeHobbyTab === 'scenery' && (
-                    <div className="hobby-panel">
-                      <h3 className="section-heading">Worth the Detour</h3>
-                      <p className="hobby-backstory">{sceneryCaption}</p>
-                      <div className="scenery-gallery">
-                        <PhotoSlot photo={sceneryPhotos[sceneryPhotoIndex]?.photo} alt="Scenery" tall />
-                        <div className="hobby-thumb-strip">
-                          {sceneryPhotos.map((item, i) => (
-                            <button
-                              key={item.id}
-                              type="button"
-                              className={`hobby-thumb ${i === sceneryPhotoIndex ? 'hobby-thumb-active' : ''}`}
-                              onClick={() => setSceneryPhotoIndex(i)}
-                            >
-                              {item.photo ? <img src={item.photo} alt={`Scenery ${i + 1}`} /> : <span>📷</span>}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  <HobbyExplorer />
                 </>
               )}
             </div>

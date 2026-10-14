@@ -15,7 +15,7 @@ const projects = [
     tags: ['SEO', 'Tailwindcss', 'Hardcoded']
   },
   {
-    title: 'Tipitask landing page',
+    title: 'Tripitask landing page',
     subtitle: 'Landing page for an app that connects road travellers with local help',
     category: 'websites',
     status: 'finished',

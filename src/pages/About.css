@@ -276,222 +276,243 @@
 }
 
 
-/* Hobby tabs */
+/* Hobby explorer — tree on the left, tabs + viewer on the right */
 
-.hobbies-tabs {
+.explorer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
   margin-top: 20px;
-  margin-bottom: 0;
+  min-height: 480px;
+  background-color: #1E1E1E;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  overflow: hidden;
   opacity: 0;
   animation: fadeDropIn 0.4s ease forwards;
 }
 
-.hobby-tab {
+.explorer-mobile-bar {
+  display: none;
+}
+
+.explorer-tree {
+  width: 250px;
+  flex-shrink: 0;
+  padding: 10px 0;
+  background-color: #181818;
+  border-right: 1px solid #333333;
+  overflow-y: auto;
+}
+
+.explorer-folder,
+.explorer-file {
   font-family: 'JetBrains Mono', monospace;
-  background-color: #2D2D2D;
-  border: 1px solid #333333;
-  border-bottom: none;
-  border-radius: 6px 6px 0 0;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-left: 2px solid transparent;
   color: #808080;
-  font-size: 0.85rem;
-  padding: 8px 16px;
+  font-size: 0.8rem;
+  text-align: left;
+  padding: 6px 12px;
   cursor: pointer;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.hobby-tab:hover {
+.explorer-folder {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.explorer-file {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.explorer-file-nested {
+  padding-left: 34px;
+}
+
+.explorer-folder:hover,
+.explorer-file:hover {
+  color: #D4D4D4;
+  background-color: #252526;
+}
+
+.explorer-file-dimmed {
+  color: #5A5A5A;
+}
+
+.explorer-file-active,
+.explorer-folder-active {
+  color: #4EC9B0;
+  background-color: #252526;
+  border-left-color: #4EC9B0;
+}
+
+.explorer-chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.explorer-chevron-closed {
+  transform: rotate(-90deg);
+}
+
+.explorer-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.explorer-tabs {
+  position: relative;
+  display: flex;
+  min-height: 38px;
+  background-color: #181818;
+  border-bottom: 1px solid #333333;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.explorer-tab {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  background-color: #181818;
+  border-right: 1px solid #333333;
+  border-top: 2px solid transparent;
+  color: #808080;
+}
+
+.explorer-tab-active {
+  background-color: #1E1E1E;
+  border-top-color: #4EC9B0;
   color: #D4D4D4;
 }
 
-.hobby-tab-active {
-  color: #9CDCFE;
-  background-color: #1E1E1E;
+.explorer-tab-name {
+  font-family: 'JetBrains Mono', monospace;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 0.8rem;
+  padding: 9px 4px 9px 14px;
+  cursor: pointer;
 }
 
-.hobby-panel {
-  background-color: #1E1E1E;
-  border: 1px solid #333333;
-  border-radius: 0 8px 8px 8px;
-  padding: 24px 20px;
-  opacity: 0;
-  animation: fadeDropIn 0.4s ease forwards;
-  animation-delay: 0.15s;
+.explorer-tab-close {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #6A6A6A;
+  padding: 5px;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.hobby-backstory {
+.explorer-tab-close:hover {
+  color: #D4D4D4;
+  background-color: #2D2D2D;
+}
+
+.explorer-viewer {
+  padding: 14px 20px 20px;
+  animation: fadeIn 0.25s ease;
+}
+
+.explorer-crumb {
+  color: #6A6A6A;
+  font-size: 0.75rem;
+  margin-bottom: 12px;
+}
+
+.explorer-stage {
+  position: relative;
+  height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #252526;
+}
+
+/* blurred copy of the photo fills the sides so nothing gets cropped */
+.explorer-stage-blur {
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: calc(100% + 60px);
+  height: calc(100% + 60px);
+  object-fit: cover;
+  filter: blur(24px);
+  opacity: 0.45;
+}
+
+.explorer-stage-photo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.explorer-stage-empty {
+  border: 1px dashed #333333;
+  color: #5A5A5A;
+  font-size: 0.85rem;
+}
+
+.explorer-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.explorer-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-color: #252526;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+}
+
+.explorer-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.explorer-thumb-active {
+  border-color: #4EC9B0;
+}
+
+.explorer-caption {
+  color: #D4D4D4;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-top: 14px;
+}
+
+.explorer-readme-text {
   color: #D4D4D4;
   font-size: 0.95rem;
   line-height: 1.6;
 }
 
-.hobby-divider {
-  border-top: 1px solid #333333;
-  margin: 20px 0;
-}
-
-.hobby-columns {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
-.hobby-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 180px;
-}
-
-.hobby-list-item {
-  font-family: 'JetBrains Mono', monospace;
-  background: transparent;
-  border: none;
-  border-left: 2px solid transparent;
+.explorer-hint {
   color: #808080;
-  font-size: 0.9rem;
-  text-align: left;
-  padding: 8px 10px;
-  cursor: pointer;
-  border-radius: 0 4px 4px 0;
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.hobby-list-item:hover {
-  color: #D4D4D4;
-  background-color: #252526;
-}
-
-.hobby-list-item-active {
-  color: #D4D4D4;
-  background-color: #252526;
-}
-
-.hobby-list-item-current {
-  color: #4EC9B0;
-  border-left-color: #4EC9B0;
-}
-
-.hobby-list-item-dimmed {
-  color: #5A5A5A;
-}
-
-.hobby-no-photo-label {
-  font-size: 0.75rem;
-  color: #5A5A5A;
-}
-
-.hobby-list-separator {
-  border-top: 1px dashed #333333;
-  margin: 10px 0;
-}
-
-.hobby-list-item-separate {
-  color: #6A6A6A;
-  font-style: italic;
-}
-
-.hobby-photo-panel {
-  flex: 1;
-  min-width: 240px;
-}
-
-.hobby-photo {
-  width: 100%;
-  border-radius: 8px;
-  display: block;
-  object-fit: cover;
-}
-
-.hobby-photo-tall {
-  height: 260px;
-}
-
-.hobby-photo-placeholder {
-  background-color: #252526;
-  border: 1px dashed #333333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #5A5A5A;
-  font-size: 0.85rem;
-}
-
-.hobby-thumb-strip {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.hobby-thumb {
-  width: 48px;
-  height: 48px;
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-color: #252526;
-  overflow: hidden;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #5A5A5A;
-}
-
-.hobby-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.hobby-thumb-active {
-  border-color: #4EC9B0;
-}
-
-.hobby-photo-caption {
-  color: #808080;
-  font-size: 0.85rem;
-  margin-top: 12px;
-  line-height: 1.5;
-}
-
-
-/* Swimming */
-
-.swim-gallery {
-  margin-top: 16px;
-}
-
-.swim-main-photo-wrap {
-  position: relative;
-}
-
-.swim-location-tag {
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  background-color: rgba(30, 30, 30, 0.85);
-  color: #D4D4D4;
-  font-size: 0.8rem;
-  padding: 4px 10px;
-  border-radius: 4px;
-}
-
-
-/* Gaming */
-
-.gaming-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-
-/* Scenery */
-
-.scenery-gallery {
-  margin-top: 16px;
 }
 
 
@@ -650,10 +671,6 @@
 
 
 @media (max-width: 768px) {
-  .hobby-columns {
-    flex-direction: column;
-  }
-
   .spotify-top-list {
     grid-template-columns: 1fr;
   }
@@ -664,5 +681,50 @@
 
   .unlisted-skill-panel {
     grid-column: 1;
+  }
+
+  /* explorer on phones: tree collapses into one bar, tabs go away */
+  .explorer {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .explorer-mobile-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    width: 100%;
+    background-color: #181818;
+    border: none;
+    border-bottom: 1px solid #333333;
+    color: #4EC9B0;
+    font-size: 0.85rem;
+    padding: 12px 14px;
+    cursor: pointer;
+  }
+
+  .explorer-tree {
+    display: none;
+    width: 100%;
+    max-height: 320px;
+    border-right: none;
+    border-bottom: 1px solid #333333;
+  }
+
+  .explorer-tree-open {
+    display: block;
+  }
+
+  .explorer-tabs {
+    display: none;
+  }
+
+  .explorer-viewer {
+    padding: 12px 14px 16px;
+  }
+
+  .explorer-stage {
+    height: 260px;
   }
 }

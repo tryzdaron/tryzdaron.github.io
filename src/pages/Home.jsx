@@ -6,8 +6,22 @@ import allServices from '../data/services'
 import ProjectCard from '../components/ProjectCard'
 import './Home.css'
 import { submitContactForm } from '../lib/api'
+import ContributionHeatmap from '../components/ContributionHeatmap'
 
 function Home() {
+
+    // ms per character
+  const skillsTypingSpeed = 15
+  const projectsTypingSpeed = 15
+  const servicesTypingSpeed = 15
+  const githubTypingSpeed = 15
+
+  const gridRevealDelay = 200 // pause after a command finishes typing, before its content shows
+
+  // how far you have to scroll before the next command starts
+  const projectsScrollTrigger = 60
+  const servicesScrollTrigger = 150
+  const githubScrollTrigger = 150
 
   const codeLines = [
     'const name = "Tryz Daron Odasco";',
@@ -26,7 +40,7 @@ function Home() {
   // 4 featured projects, client work first then personal builds
   const featuredTitles = [
     'CleanCo Australia',
-    'tripitask.com landing page',
+    'Tripitask landing page',
     'AI news briefing bot',
     'YouTube clip finder automation'
   ]
@@ -150,7 +164,7 @@ function Home() {
     return () => observer.disconnect()
   }, [])
 
-  // skills command typing
+    // skills command typing
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!terminalVisible) return
@@ -166,7 +180,7 @@ function Home() {
         clearInterval(typing)
         setSkillsCommandDone(true)
       }
-    }, 30)
+    }, skillsTypingSpeed)
 
     return () => clearInterval(typing)
   }, [terminalVisible])
@@ -174,7 +188,7 @@ function Home() {
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!skillsCommandDone) return
-    const t = setTimeout(() => setSkillsGridVisible(true), 350)
+    const t = setTimeout(() => setSkillsGridVisible(true), gridRevealDelay)
     return () => clearTimeout(t)
   }, [skillsCommandDone])
 
@@ -184,10 +198,9 @@ function Home() {
     if (!skillsGridVisible) return
 
     const scrollYAtFinish = window.scrollY
-    const scrollThreshold = 60
 
     const handleScroll = () => {
-      if (window.scrollY > scrollYAtFinish + scrollThreshold) {
+      if (window.scrollY > scrollYAtFinish + projectsScrollTrigger) {
         setProjectsVisible(true)
         window.removeEventListener('scroll', handleScroll)
       }
@@ -213,7 +226,7 @@ function Home() {
         clearInterval(typing)
         setProjectsCommandDone(true)
       }
-    }, 50)
+    }, projectsTypingSpeed)
 
     return () => clearInterval(typing)
   }, [projectsVisible])
@@ -221,7 +234,7 @@ function Home() {
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!projectsCommandDone) return
-    const t = setTimeout(() => setProjectsGridVisible(true), 350)
+    const t = setTimeout(() => setProjectsGridVisible(true), gridRevealDelay)
     return () => clearTimeout(t)
   }, [projectsCommandDone])
 
@@ -230,10 +243,9 @@ function Home() {
     if (!projectsGridVisible) return
 
     const scrollYAtFinish = window.scrollY
-    const scrollThreshold = 150
 
     const handleScroll = () => {
-      if (window.scrollY > scrollYAtFinish + scrollThreshold) {
+      if (window.scrollY > scrollYAtFinish + servicesScrollTrigger) {
         setServicesVisible(true)
         window.removeEventListener('scroll', handleScroll)
       }
@@ -259,7 +271,7 @@ function Home() {
         clearInterval(typing)
         setServicesCommandDone(true)
       }
-    }, 30)
+    }, servicesTypingSpeed)
 
     return () => clearInterval(typing)
   }, [servicesVisible])
@@ -267,7 +279,7 @@ function Home() {
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!servicesCommandDone) return
-    const t = setTimeout(() => setServicesGridVisible(true), 350)
+    const t = setTimeout(() => setServicesGridVisible(true), gridRevealDelay)
     return () => clearTimeout(t)
   }, [servicesCommandDone])
 
@@ -276,10 +288,9 @@ function Home() {
     if (!servicesGridVisible) return
 
     const scrollYAtFinish = window.scrollY
-    const scrollThreshold = 150
 
     const handleScroll = () => {
-      if (window.scrollY > scrollYAtFinish + scrollThreshold) {
+      if (window.scrollY > scrollYAtFinish + githubScrollTrigger) {
         setGithubVisible(true)
         window.removeEventListener('scroll', handleScroll)
       }
@@ -305,7 +316,7 @@ function Home() {
         clearInterval(typing)
         setGithubCommandDone(true)
       }
-    }, 30)
+    }, githubTypingSpeed)
 
     return () => clearInterval(typing)
   }, [githubVisible])
@@ -313,7 +324,7 @@ function Home() {
   useEffect(() => {
     if (terminalAlreadyPlayedRef.current) return
     if (!githubCommandDone) return
-    const t = setTimeout(() => setGithubGridVisible(true), 350)
+    const t = setTimeout(() => setGithubGridVisible(true), gridRevealDelay)
     return () => clearTimeout(t)
   }, [githubCommandDone])
 
@@ -396,7 +407,6 @@ function Home() {
     }
   }
 
-
   return (
     <div className="home">
 
@@ -418,7 +428,7 @@ function Home() {
               <p className="terminal-output">&gt; console.log("Let's build something.")</p>
             </div>
           </div>
-          <button className="about-btn">About Me →</button>
+          <Link to="/about" className="about-btn">About Me →</Link>
         </div>
         <img src={avatar} alt="Tryz Daron Odasco" className="avatar" />
         <button
@@ -601,11 +611,9 @@ function Home() {
                         src="https://github-readme-stats-iota-eight-71.vercel.app/api?username=tryzdaron&show_icons=true&theme=dark&bg_color=252526&title_color=569CD6&icon_color=4EC9B0&text_color=D4D4D4&border_color=333333"
                         alt="GitHub stats"
                       />
-                      <img
-                        className="github-stats-img github-graph-img"
-                        src="https://github-readme-activity-graph-gamma-sooty.vercel.app/graph?username=tryzdaron&theme=react-dark&bg_color=252526&color=4EC9B0&line=569CD6&point=D4D4D4&border=333333"
-                        alt="GitHub contribution activity graph"
-                      />
+
+                      <ContributionHeatmap username="tryzdaron" />
+
 
                       <p className="terminal-success">✓ github-activity.log loaded successfully</p>
                     </>
