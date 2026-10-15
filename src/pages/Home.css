@@ -548,7 +548,6 @@
   /* keeps room for two lines so the box doesnt jump when the typing wraps */
   .terminal-line {
     font-size: 1rem;
-    min-height: 3.2em;
     margin-bottom: 10px;
   }
 
@@ -677,5 +676,11 @@
 
   .skill-card{
     padding-block: 24px;
+  }
+}
+
+@media (max-width: 400px) {
+  .terminal-line {
+    font-size: 0.9rem;
   }
 }
