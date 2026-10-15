@@ -193,6 +193,9 @@
 
 .project-view-hint {
   color: #4EC9B0;
+  font-size: 0.85rem;
+  display: inline-block;
+  margin-top: 6px;
 }
 
 .contact-box {
@@ -412,4 +415,69 @@
   padding: 4px 12px;
   border-radius: 4px;
   font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+  .project-card {
+    padding: 12px;
+  }
+
+  /* badge goes above the title */
+  .project-card-top {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .project-title {
+    font-size: 0.9rem;
+  }
+
+  .project-desc {
+    font-size: 0.8rem;
+  }
+
+    .project-view-hint {
+    font-size: 0.8rem;
+  }
+
+  /* title on the left, status badge on the right */
+.project-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.project-card-top .project-title {
+  min-width: 0;
+}
+
+.project-card-top .status-pill {
+  flex-shrink: 0;
+}
+
+  .project-commit {
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
+
+  .project-tag {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+
+    .contact-box {
+    padding: 16px;
+  }
+
+  .cta-flag {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .cta-text {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
 }

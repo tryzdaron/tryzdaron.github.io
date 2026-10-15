@@ -231,12 +231,17 @@ html, body, #root {
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    padding: 0 12px 0 20px;
+  }
+
   .navbar-links {
     display: none;
   }
 
   .navbar-hamburger {
     display: block;
+    padding: 8px;
   }
 }
 
@@ -345,12 +350,28 @@ html, body, #root {
 }
 
 @media (max-width: 600px) {
+  .site-footer {
+    padding: 40px 12px 32px;
+  }
+
   .footer-top {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: flex-start;
+    gap: 16px;
+    padding: 0 0 20px;
   }
 
   .footer-nav {
     grid-template-columns: repeat(2, auto);
+    gap: 10px 20px;
+  }
+
+  .footer-socials {
+    gap: 14px;
+  }
+
+  .footer-line {
+    font-size: 0.8rem;
   }
 }

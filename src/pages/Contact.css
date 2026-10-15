@@ -189,4 +189,88 @@
     flex-direction: column;
     align-items: center;
   }
+
+  .contact-side-column {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-page {
+    padding: 24px 12px;
+  }
+
+  .contact-page-header {
+    margin-bottom: 24px;
+  }
+
+  .contact-page-header .command-line {
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-page-header .section-heading {
+    font-size: 1.6rem;
+  }
+
+  .contact-page-subtext {
+    font-size: 0.85rem;
+    text-wrap: balance;
+  }
+
+  .contact-page-columns {
+    gap: 16px;
+  }
+
+  .contact-form-card-wrap,
+  .contact-side-column {
+    max-width: none;
+  }
+
+  .contact-form-card {
+    padding: 16px 14px;
+  }
+
+  /* 1rem on purpose, see the note below */
+  .contact-form-card .form-input,
+  .contact-form-card .note-textarea {
+    font-size: 1rem;
+  }
+
+  .contact-form-card .note-subtext {
+    font-size: 0.8rem;
+  }
+
+  .contact-note-toggle-wrap {
+    margin-top: 18px;
+    padding-top: 16px;
+  }
+
+  .contact-note-toggle {
+    font-size: 0.8rem;
+  }
+
+  .contact-status-card {
+    padding: 16px 14px;
+  }
+
+  .contact-status-line {
+    font-size: 0.85rem;
+  }
+
+  .contact-status-detail {
+    font-size: 0.8rem;
+  }
+
+  .contact-status-note {
+    font-size: 0.75rem;
+  }
+
+  .confirm-modal {
+    padding: 16px 14px;
+  }
+
+  .confirm-modal .detail-text {
+    font-size: 0.85rem;
+  }
 }

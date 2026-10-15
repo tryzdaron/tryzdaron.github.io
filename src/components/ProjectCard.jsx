@@ -31,15 +31,15 @@ function ProjectCard({ project, delay }) {
           }
         }}
       >
-        {!finished && <span className="status-pill project-row-status">in progress</span>}
-        <p className="project-title">{project.title}</p>
-        <p className="project-desc">
-          {project.subtitle}{' '}
-          <span className="project-view-hint">
-            {open ? 'hide details' : 'view details'}{' '}
-            <span className={`project-arrow ${open ? 'project-arrow-open' : ''}`}>→</span>
-          </span>
-        </p>
+        <div className="project-card-top">
+          <p className="project-title">{project.title}</p>
+          {!finished && <span className="status-pill">in progress</span>}
+        </div>
+        <p className="project-desc">{project.subtitle}</p>
+        <span className="project-view-hint">
+          {open ? 'hide details' : 'view details'}{' '}
+          <span className={`project-arrow ${open ? 'project-arrow-open' : ''}`}>→</span>
+        </span>
       </div>
 
       <div className={`project-details ${open ? 'project-details-open' : ''}`}>

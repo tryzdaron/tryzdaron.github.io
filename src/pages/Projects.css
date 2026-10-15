@@ -9,12 +9,6 @@
   margin-bottom: 20px;
 }
 
-.project-row-status {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-}
-
 .project-outcome {
   font-size: 0.8rem;
   margin-top: 6px;
@@ -26,4 +20,23 @@
 
 .project-outcome-progress {
   color: #FFBD2E;
+}
+
+@media (max-width: 600px) {
+  .projects-page {
+    padding: 24px 12px;
+  }
+
+  .projects-page .command-line {
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+
+  .projects-page .section-heading {
+    font-size: 1.6rem;
+  }
+
+  .projects-page-group {
+    margin-bottom: 16px;
+  }
 }

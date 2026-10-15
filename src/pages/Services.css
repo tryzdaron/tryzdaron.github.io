@@ -157,3 +157,84 @@
 .cta-banner-visible {
   animation: fadeSlideUp 0.8s ease forwards;
 }
+
+@media (max-width: 600px) {
+  .services-page {
+    padding: 24px 12px;
+  }
+
+  .services-hero {
+    margin-bottom: 24px;
+  }
+
+  .services-hero-title {
+    font-size: 1.6rem;
+  }
+
+  .services-hero-subtitle {
+    font-size: 0.85rem;
+    text-wrap: balance;
+  }
+
+  .services-list {
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .service-block {
+    padding: 14px 12px;
+  }
+
+  .service-block-header {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .service-block-symbol {
+    font-size: 1.2rem;
+  }
+
+  .service-block-title {
+    font-size: 1.2rem;
+  }
+
+  .service-block-desc {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .service-block-details {
+    margin-bottom: 14px;
+  }
+
+  .service-block-details li {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin-bottom: 4px;
+  }
+
+  .services-faq {
+    margin-bottom: 32px;
+  }
+
+  .services-faq .section-heading {
+    font-size: 1.3rem;
+  }
+
+  .faq-list {
+    gap: 12px;
+  }
+
+  .faq-item {
+    padding-bottom: 10px;
+  }
+
+  .faq-question {
+    font-size: 0.8rem;
+  }
+
+  .faq-answer {
+    font-size: 0.8rem;
+  }
+}
