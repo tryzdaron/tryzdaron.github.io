@@ -56,11 +56,8 @@ function Home() {
   const terminalPlayed = () => sessionStorage.getItem('terminalAnimationPlayed') === 'true'
 
   const [lineIndex, setLineIndex] = useState(0)
-  const [typedText, setTypedText] = useState(() =>
-    sessionStorage.getItem('heroAnimationPlayed') === 'true' ? codeLines[0] : ''
-  )
+  const [typedText, setTypedText] = useState('')
   const [deleting, setDeleting] = useState(false)
-  const heroAlreadyPlayedRef = useRef(sessionStorage.getItem('heroAnimationPlayed') === 'true')
 
   const [aboutVisible, setAboutVisible] = useState(false)
 
@@ -97,10 +94,8 @@ function Home() {
   const [contactBoxVisible, setContactBoxVisible] = useState(terminalPlayed)
 
 
-  // hero typing animation
+  // hero typing animation, loops forever and plays on every load
   useEffect(() => {
-    if (heroAlreadyPlayedRef.current) return
-
     const currentLine = codeLines[lineIndex]
     let timer
 
@@ -121,10 +116,6 @@ function Home() {
 
     return () => clearTimeout(timer)
   }, [typedText, deleting, lineIndex])
-
-  useEffect(() => {
-    sessionStorage.setItem('heroAnimationPlayed', 'true')
-  }, [])
 
   // about teaser fade in on scroll
   useEffect(() => {

@@ -99,64 +99,60 @@
 .spotify-featured-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 20px;
-  margin-bottom: 32px;
+  gap: 12px;
+  margin-top: 16px;
+  margin-bottom: 24px;
 }
 
-.spotify-featured-card {
+.spotify-chip {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   background-color: #1E1E1E;
   border: 1px solid #333333;
   border-radius: 8px;
-  padding: 20px;
-  flex: 1;
-  min-width: 220px;
-  text-align: center;
+  padding: 12px;
   opacity: 0;
   animation: fadeDropIn 0.4s ease forwards;
 }
 
-.spotify-featured-card:nth-child(1) { animation-delay: 0.1s; }
-.spotify-featured-card:nth-child(2) { animation-delay: 0.25s; }
+.spotify-chip:nth-child(1) { animation-delay: 0.1s; }
+.spotify-chip:nth-child(2) { animation-delay: 0.25s; }
 
-.spotify-avatar-circle {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #252526;
-  border: 2px solid #569CD6;
-  margin: 0 auto 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  font-size: 1.5rem;
-}
-
-.spotify-avatar-circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.spotify-album-square {
-  width: 100px;
-  height: 100px;
+.spotify-chip-art {
+  width: 56px;
+  height: 56px;
   border-radius: 6px;
-  background-color: #252526;
   border: 2px solid #4EC9B0;
-  margin: 0 auto 12px;
+  background-color: #252526;
+  flex-shrink: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  font-size: 1.5rem;
 }
 
-.spotify-album-square img {
+.spotify-chip-art-round {
+  border-radius: 50%;
+  border-color: #569CD6;
+}
+
+.spotify-chip-art img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.spotify-chip-info {
+  min-width: 0;
+}
+
+.spotify-chip-info p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .spotify-featured-label {
@@ -176,9 +172,10 @@
   margin-top: 2px;
 }
 
+/* minmax(0, 1fr) is what lets the long titles shrink and get the "..." */
 .spotify-top-list {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px 24px;
   opacity: 0;
   animation: fadeDropIn 0.4s ease forwards;
@@ -189,6 +186,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .spotify-track-row {
@@ -200,14 +198,11 @@
   text-decoration: none;
   transition: background-color 0.2s ease;
   position: relative;
+  min-width: 0;
 }
 
 .spotify-track-row:hover {
   background-color: rgba(255, 255, 255, 0.04);
-}
-
-.spotify-track-row:hover .spotify-track-link-icon {
-  opacity: 1;
 }
 
 .spotify-track-rank {
@@ -218,8 +213,8 @@
 }
 
 .spotify-track-thumb {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 4px;
   background-color: #1E1E1E;
   flex-shrink: 0;
@@ -260,8 +255,6 @@
 .spotify-track-link-icon {
   color: #4EC9B0;
   font-size: 0.9rem;
-  opacity: 0;
-  transition: opacity 0.2s ease;
   flex-shrink: 0;
 }
 
@@ -288,10 +281,6 @@
   overflow: hidden;
   opacity: 0;
   animation: fadeDropIn 0.4s ease forwards;
-}
-
-.explorer-mobile-bar {
-  display: none;
 }
 
 .explorer-tree {
@@ -516,6 +505,157 @@
 }
 
 
+/* Hobby gallery — phone version, hidden on bigger screens */
+
+.gallery {
+  display: none;
+  margin-top: 16px;
+  background-color: #1E1E1E;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  padding: 12px;
+  opacity: 0;
+  animation: fadeDropIn 0.4s ease forwards;
+}
+
+.gallery-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: none;
+}
+
+.gallery-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-chip {
+  font-family: 'JetBrains Mono', monospace;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid #333333;
+  border-radius: 6px;
+  color: #808080;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.gallery-chip-active {
+  color: #4EC9B0;
+  border-color: #4EC9B0;
+  background-color: #252526;
+}
+
+.gallery-chip-count {
+  color: #5A5A5A;
+}
+
+.gallery-chip-active .gallery-chip-count {
+  color: #4EC9B0;
+}
+
+.gallery-viewer {
+  animation: fadeIn 0.25s ease;
+}
+
+.gallery .explorer-stage {
+  height: 260px;
+}
+
+.gallery-text-slide {
+  background-color: #252526;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.gallery-strip {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 0 4px;
+  scrollbar-width: none;
+}
+
+.gallery-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-thumb {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+  background-color: #252526;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  color: #6A6A6A;
+  cursor: pointer;
+}
+
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-thumb-active {
+  border-color: #4EC9B0;
+}
+
+.gallery-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.gallery-meta-name {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  color: #4EC9B0;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gallery-meta-count {
+  color: #6A6A6A;
+}
+
+.gallery-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid #333333;
+  border-radius: 6px;
+  color: #D4D4D4;
+  cursor: pointer;
+}
+
+.gallery-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+
 /* Unlisted skills — each card animates its own border independently.
    Resting: 3px accent top border. Open: 3px accent bottom border, bottom
    corners square. The sweep between the two states is drawn by an SVG
@@ -554,9 +694,10 @@
   box-shadow: none;
 }
 
-.unlisted-skill-card:nth-child(1) { animation-delay: 0.1s; }
-.unlisted-skill-card:nth-child(2) { animation-delay: 0.25s; }
-.unlisted-skill-card:nth-child(3) { animation-delay: 0.4s; }
+/* nth-of-type because on phones the panels sit between the cards, nth-child would count them */
+.unlisted-skill-card:nth-of-type(1) { animation-delay: 0.1s; }
+.unlisted-skill-card:nth-of-type(2) { animation-delay: 0.25s; }
+.unlisted-skill-card:nth-of-type(3) { animation-delay: 0.4s; }
 
 /* settled open state — bottom corners square off, background tints to match
    the panel below so they read as one shape. The accent border itself (top
@@ -672,7 +813,7 @@
 
 @media (max-width: 768px) {
   .spotify-top-list {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .unlisted-skills-grid {
@@ -683,48 +824,108 @@
     grid-column: 1;
   }
 
-  /* explorer on phones: tree collapses into one bar, tabs go away */
+  /* phones get the chips + gallery instead of the tree explorer */
   .explorer {
-    flex-direction: column;
-    min-height: 0;
-  }
-
-  .explorer-mobile-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: 'JetBrains Mono', monospace;
-    width: 100%;
-    background-color: #181818;
-    border: none;
-    border-bottom: 1px solid #333333;
-    color: #4EC9B0;
-    font-size: 0.85rem;
-    padding: 12px 14px;
-    cursor: pointer;
-  }
-
-  .explorer-tree {
     display: none;
-    width: 100%;
-    max-height: 320px;
-    border-right: none;
-    border-bottom: 1px solid #333333;
   }
 
-  .explorer-tree-open {
+  .gallery {
     display: block;
   }
+}
 
-  .explorer-tabs {
-    display: none;
+
+/* Mobile — same paddings and text sizes as Home */
+
+@media (max-width: 600px) {
+  .about-page {
+    padding: 24px 12px;
   }
 
-  .explorer-viewer {
-    padding: 12px 14px 16px;
+  .about-page-header {
+    margin-bottom: 24px;
   }
 
-  .explorer-stage {
-    height: 260px;
+  .about-page-header .section-heading {
+    font-size: 1.6rem;
+  }
+
+  .about-terminal-tab {
+    padding: 8px 14px;
+  }
+
+  .about-terminal-path {
+    font-size: 0.8rem;
+  }
+
+  .about-terminal-content {
+    padding: 16px 12px;
+  }
+
+  .terminal-block:not(:last-child) {
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+  }
+
+  .terminal-block .command-line {
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+
+  .terminal-block .section-heading {
+    font-size: 1.3rem;
+  }
+
+  .about-bio-text {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+
+  .spotify-section-bg {
+    padding: 12px;
+  }
+
+  .spotify-chip {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+
+  .spotify-featured-row {
+    margin-bottom: 16px;
+  }
+
+  .spotify-track-row {
+    gap: 10px;
+    padding: 8px 4px;
+  }
+
+  .explorer-readme-text,
+  .explorer-caption {
+    font-size: 0.9rem;
+  }
+
+  .gallery {
+    padding: 10px;
+  }
+
+  .gallery .explorer-stage {
+    height: 240px;
+  }
+
+  .unlisted-skill-card {
+    padding: 16px;
+  }
+
+  .unlisted-skill-title {
+    font-size: 1rem;
+  }
+
+  .unlisted-skill-panel-inner {
+    padding: 16px 14px;
+  }
+
+  .skill-photo-tile {
+    width: 72px;
+    height: 72px;
   }
 }

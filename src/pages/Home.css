@@ -17,6 +17,7 @@
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #569CD6;
+  order: -1; /* picture on top when the hero is stacked */
 }
 
 .hero-right {
@@ -27,7 +28,12 @@
   width: 100%;
 }
 
-@media (min-width: 768px) {
+/* applies on every screen size now, it was stuck inside the 768px query before */
+.about-btn {
+  text-decoration: none;
+}
+
+@media (min-width: 900px) {
   .hero {
     flex-direction: row;
     justify-content: center;
@@ -39,9 +45,12 @@
     align-items: flex-start;
   }
 
+  .avatar {
+    order: 0;
+  }
+
   .about-btn {
     align-self: flex-start;
-    text-decoration: none;
   }
 }
 
@@ -510,4 +519,163 @@
   opacity: 0;
   pointer-events: none;
   left: -9999px;
+}
+
+
+/* ── Mobile ────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  /* hero: avatar on top, extra bottom padding so the arrow has its own space */
+  .hero {
+    padding: 16px 12px 90px;
+    gap: 20px;
+  }
+
+  .hero-right {
+    gap: 20px;
+  }
+
+  .avatar {
+    width: 240px;
+    height: 240px;
+  }
+
+  .terminal-body {
+    padding: 18px 16px;
+    min-height: 0;
+  }
+
+  /* keeps room for two lines so the box doesnt jump when the typing wraps */
+  .terminal-line {
+    font-size: 1rem;
+    min-height: 3.2em;
+    margin-bottom: 10px;
+  }
+
+  .terminal-sub {
+    font-size: 0.8rem;
+  }
+
+  .terminal-output {
+    font-size: 0.85rem;
+  }
+
+  .scroll-arrow {
+    bottom: 20px;
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+  }
+
+  /* about teaser */
+  .about-teaser {
+    padding: 24px 12px;
+  }
+
+  .about-content {
+    padding: 18px 16px;
+  }
+
+  .about-narrative {
+    font-size: 0.9rem;
+  }
+
+  /* editor box */
+  .terminal-session {
+    padding: 24px 12px;
+  }
+
+  .code-editor-tab {
+    padding: 8px 14px;
+  }
+
+  .code-editor-path {
+    font-size: 0.8rem;
+  }
+
+  /* smaller numbers, line height stays the same so the count still matches */
+  .line-numbers {
+    padding: 16px 6px;
+    min-width: 24px;
+    font-size: 0.65rem;
+  }
+
+  .code-editor-content {
+    padding: 16px 12px;
+  }
+
+  .terminal-block:not(:last-child) {
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+  }
+
+  .terminal-block .command-line {
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+
+  .terminal-block .section-heading {
+    font-size: 1.3rem;
+  }
+
+  .terminal-block .terminal-success {
+    font-size: 0.8rem;
+  }
+
+  .skill-card {
+    padding: 12px;
+  }
+
+  .json-key {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+  }
+
+  .tag-pill {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+  }
+
+  .service-desc,
+  .service-link {
+    font-size: 0.8rem;
+  }
+
+  /* the stats card is too small to read on a phone, heatmap stays
+     (not hiding the fallback graph image that shows if the heatmap fails) */
+  .github-stats-img:not(.github-graph-img) {
+    display: none;
+  }
+
+  .heatmap-card {
+    margin: 12px auto;
+    padding: 10px 12px;
+  }
+
+  /* contact tabs */
+  .contact-banner {
+    padding: 24px 12px;
+  }
+
+  .contact-tabs {
+    gap: 16px;
+  }
+
+  .contact-tab {
+    font-size: 0.8rem;
+  }
+
+  .contact-tab:not(:last-child) {
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-card{
+    padding-block: 24px;
+  }
 }

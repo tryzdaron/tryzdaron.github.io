@@ -1,10 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+// how many days to show per screen size
+const getRange = () => {
+  if (window.innerWidth <= 600) return { days: 119, label: '4 months' }
+  if (window.innerWidth <= 900) return { days: 300, label: '10 months' }
+  return { days: 400, label: 'year' }
+}
 
 function ContributionHeatmap({ username }) {
   const [days, setDays] = useState([])
   const [status, setStatus] = useState('loading') // loading | done | error
+  const [range, setRange] = useState(getRange)
+  const scrollRef = useRef(null)
 
   useEffect(() => {
     fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`)
@@ -17,28 +26,45 @@ function ContributionHeatmap({ username }) {
       .catch(() => setStatus('error'))
   }, [username])
 
+  // keeps isMobile in sync if the window gets resized or rotated
+ useEffect(() => {
+    const handleResize = () => setRange(getRange())
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // start scrolled to the right so the newest weeks are what you see first
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = scrollRef.current.scrollWidth
+    }
+  }, [status, range.label])
+
   if (status === 'loading') return <p className="heatmap-note">loading contributions...</p>
   if (status === 'error') {
     return (
-        <img
+      <img
         className="github-stats-img github-graph-img"
         src="https://github-readme-activity-graph-gamma-sooty.vercel.app/graph?username=tryzdaron&theme=react-dark&bg_color=252526&color=4EC9B0&line=569CD6&point=D4D4D4&border=333333"
         alt="GitHub contribution activity graph"
-        />
+      />
     )
-    }
+  }
 
-  const total = days.reduce((sum, day) => sum + day.count, 0)
+  // on mobile only the latest few months
+  const visibleDays = days.slice(-range.days)
+
+  const total = visibleDays.reduce((sum, day) => sum + day.count, 0)
 
   // empty cells up front so the first day lands on the right weekday row
-  const firstWeekday = new Date(days[0].date + 'T00:00:00').getDay()
+  const firstWeekday = new Date(visibleDays[0].date + 'T00:00:00').getDay()
   const padding = Array.from({ length: firstWeekday })
 
   // one month label per month, skipped if it would crowd the previous one
   const monthLabels = []
   let lastMonth = -1
   let lastLabelColumn = -10
-  days.forEach((day, i) => {
+  visibleDays.forEach((day, i) => {
     const column = Math.floor((i + firstWeekday) / 7)
     const month = new Date(day.date + 'T00:00:00').getMonth()
     if (month !== lastMonth) {
@@ -52,9 +78,11 @@ function ContributionHeatmap({ username }) {
 
   return (
     <div className="heatmap-card">
-      <p className="heatmap-title">{total} contributions in the last year</p>
+      <p className="heatmap-title">
+        {total} contributions in the last {range.label}
+      </p>
 
-      <div className="heatmap-scroll">
+      <div className="heatmap-scroll" ref={scrollRef}>
         <div className="heatmap-wrap">
           <div className="heatmap-months">
             {monthLabels.map(label => (
@@ -70,7 +98,7 @@ function ContributionHeatmap({ username }) {
             {padding.map((_, i) => (
               <div key={`pad-${i}`} className="heatmap-cell heatmap-pad"></div>
             ))}
-            {days.map(day => (
+            {visibleDays.map(day => (
               <div
                 key={day.date}
                 className={`heatmap-cell heatmap-level-${day.level}`}

@@ -1,5 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
-import { IconChevronDown, IconX } from '@tabler/icons-react'
+import { useState, useEffect, useRef, Fragment } from 'react'
+import {
+  IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
+  IconInfoCircle,
+  IconX
+} from '@tabler/icons-react'
 import {
   motorcycles,
   bicycles,
@@ -16,6 +22,7 @@ import './About.css'
 // text inside the README tab
 const hobbyIntro = "When I'm not building websites, I'm out riding, playing games, or looking for a view worth stopping for."
 const hobbyHint = 'Pick a file from the explorer to open it.'
+const hobbyHintMobile = 'Pick a category above, then swipe or tap a thumbnail.'
 
 // ms per character — edit each independently since command lengths vary a lot
 const whoamiTypingSpeed = 20
@@ -76,31 +83,76 @@ const hobbyFiles = [
   }
 ]
 
-// the whole "Life Outside the Code" box — tree on the left, tabs + viewer on the right
+// one slide per photo, text entries (readme, folder description) get a single text slide
+// .flat() because hobbies.js wraps each photo list in an extra array
+const makeSlides = (file) => {
+  if (file.kind === 'readme') {
+    return [{ key: file.id, name: file.name, type: 'text', text: `${hobbyIntro} ${hobbyHintMobile}` }]
+  }
+  if (file.kind === 'folder') {
+    return [{ key: file.id, name: 'about.md', type: 'text', text: file.text }]
+  }
+
+  const photoList = file.photos.flat()
+  if (photoList.length === 0) {
+    return [{ key: file.id, name: file.name, type: 'photo', photo: null, text: file.text, noPhoto: file.noPhoto }]
+  }
+  return photoList.map((photo, i) => ({
+    key: `${file.id}-${i}`,
+    name: file.name,
+    type: 'photo',
+    photo,
+    text: file.text,
+    noPhoto: false
+  }))
+}
+
+// mobile gallery: one chip per category, each with its own list of slides
+const galleryCategories = [
+  { id: 'readme', label: 'README', files: hobbyFiles.filter(file => file.id === 'readme') },
+  ...vehicleFolders.map(folder => ({
+    id: folder.id,
+    label: folder.id,
+    count: folder.items.length,
+    files: hobbyFiles.filter(file => file.id === folder.id || file.folder === folder.id)
+  })),
+  { id: 'gaming', label: 'gaming', files: hobbyFiles.filter(file => file.id === 'gaming') },
+  { id: 'scenery', label: 'scenery', files: hobbyFiles.filter(file => file.id === 'scenery') }
+].map(category => ({ ...category, slides: category.files.flatMap(makeSlides) }))
+
+// true while the screen matches the query, updates on resize/rotate
+function useMatchMedia(query) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(query)
+    const handleChange = (e) => setMatches(e.matches)
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [query])
+
+  return matches
+}
+
+// desktop and tablet version — tree on the left, tabs + viewer on the right
 function HobbyExplorer() {
   const [openTabs, setOpenTabs] = useState(['readme'])
   const [activeFileId, setActiveFileId] = useState('readme')
   const [openFolders, setOpenFolders] = useState({ motorcycle: false, cycling: false })
   const [photoIndex, setPhotoIndex] = useState(0)
-  const [mobileTreeOpen, setMobileTreeOpen] = useState(false)
 
   const tabBarRef = useRef(null)
   const tabRefs = useRef({})
 
   const activeFile = hobbyFiles.find(file => file.id === activeFileId) || null
-  const photos = activeFile ? activeFile.photos : []
+  const photos = activeFile ? activeFile.photos.flat() : []
   const currentPhoto = photos[photoIndex] || null
 
   // opens a tab, or just jumps to it if it's already open
-  const showTab = (fileId) => {
+  const openFile = (fileId) => {
     setOpenTabs(tabs => (tabs.includes(fileId) ? tabs : [...tabs, fileId]))
     setActiveFileId(fileId)
     setPhotoIndex(0)
-  }
-
-  const openFile = (fileId) => {
-    showTab(fileId)
-    setMobileTreeOpen(false)
   }
 
   const switchTab = (fileId) => {
@@ -125,7 +177,7 @@ function HobbyExplorer() {
   const toggleFolder = (folderId) => {
     const willOpen = !openFolders[folderId]
     setOpenFolders(prev => ({ ...prev, [folderId]: willOpen }))
-    if (willOpen) showTab(folderId)
+    if (willOpen) openFile(folderId)
   }
 
   // keeps the active tab visible when the tab bar scrolls sideways
@@ -155,26 +207,10 @@ function HobbyExplorer() {
     </button>
   )
 
-  const phonePath = activeFile
-    ? (activeFile.folder ? `${activeFile.folder} / ${activeFile.name}` : activeFile.name)
-    : 'pick a file'
-
   return (
     <div className="explorer">
 
-      <button
-        type="button"
-        className="explorer-mobile-bar"
-        onClick={() => setMobileTreeOpen(open => !open)}
-      >
-        <span>{phonePath}</span>
-        <IconChevronDown
-          size={16}
-          className={`explorer-chevron ${mobileTreeOpen ? '' : 'explorer-chevron-closed'}`}
-        />
-      </button>
-
-      <div className={`explorer-tree ${mobileTreeOpen ? 'explorer-tree-open' : ''}`}>
+      <div className="explorer-tree">
         {renderFileButton(hobbyFiles.find(file => file.id === 'readme'))}
 
         {vehicleFolders.map(folder => (
@@ -278,6 +314,151 @@ function HobbyExplorer() {
             )}
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+// phone version — category chips, swipeable photo, thumbnail strip for that category
+function HobbyGallery() {
+  const [categoryId, setCategoryId] = useState('readme')
+  const [slideIndex, setSlideIndex] = useState(0)
+
+  const touchStartRef = useRef(null)
+  const stripRef = useRef(null)
+  const thumbRefs = useRef([])
+
+  const category = galleryCategories.find(item => item.id === categoryId)
+  const slides = category.slides
+  const slide = slides[slideIndex]
+
+  const pickCategory = (id) => {
+    setCategoryId(id)
+    setSlideIndex(0)
+  }
+
+  const goTo = (index) => {
+    setSlideIndex(Math.min(Math.max(index, 0), slides.length - 1))
+  }
+
+  const handleTouchStart = (e) => {
+    touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+  }
+
+  // only counts as a swipe if it moved mostly sideways, so scrolling the page doesn't flip photos
+  const handleTouchEnd = (e) => {
+    const start = touchStartRef.current
+    touchStartRef.current = null
+    if (!start) return
+
+    const moveX = e.changedTouches[0].clientX - start.x
+    const moveY = e.changedTouches[0].clientY - start.y
+    if (Math.abs(moveX) < 50 || Math.abs(moveX) < Math.abs(moveY)) return
+
+    goTo(slideIndex + (moveX < 0 ? 1 : -1))
+  }
+
+  // keeps the active thumbnail in the middle of the strip
+  useEffect(() => {
+    const strip = stripRef.current
+    const thumb = thumbRefs.current[slideIndex]
+    if (!strip || !thumb) return
+
+    strip.scrollTo({
+      left: thumb.offsetLeft - (strip.clientWidth - thumb.offsetWidth) / 2,
+      behavior: 'smooth'
+    })
+  }, [categoryId, slideIndex])
+
+  return (
+    <div className="gallery">
+      <div className="gallery-chips">
+        {galleryCategories.map(item => (
+          <button
+            key={item.id}
+            type="button"
+            className={`gallery-chip ${item.id === categoryId ? 'gallery-chip-active' : ''}`}
+            onClick={() => pickCategory(item.id)}
+          >
+            {item.label}
+            {item.count && <span className="gallery-chip-count">{item.count}</span>}
+          </button>
+        ))}
+      </div>
+
+      <div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        <div className="gallery-viewer" key={slide.key}>
+          {slide.type === 'photo' ? (
+            <div className={`explorer-stage ${slide.photo ? '' : 'explorer-stage-empty'}`}>
+              {slide.photo ? (
+                <>
+                  <img className="explorer-stage-blur" src={slide.photo} alt="" aria-hidden="true" />
+                  <img className="explorer-stage-photo" src={slide.photo} alt={slide.name} />
+                </>
+              ) : (
+                <span>{slide.noPhoto ? 'no photo of this one' : '📷 photo placeholder'}</span>
+              )}
+            </div>
+          ) : (
+            <div className="gallery-text-slide">
+              <p className="explorer-readme-text">{slide.text}</p>
+            </div>
+          )}
+        </div>
+
+        {slides.length > 1 && (
+          <div className="gallery-strip" ref={stripRef}>
+            {slides.map((item, i) => (
+              <button
+                key={item.key}
+                type="button"
+                ref={(el) => { thumbRefs.current[i] = el }}
+                className={`gallery-thumb ${i === slideIndex ? 'gallery-thumb-active' : ''}`}
+                onClick={() => setSlideIndex(i)}
+                aria-label={item.name}
+              >
+                {item.type === 'photo' && item.photo ? (
+                  <img src={item.photo} alt="" />
+                ) : item.type === 'text' ? (
+                  <IconInfoCircle size={18} />
+                ) : (
+                  <span>-</span>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="gallery-meta">
+          <button
+            type="button"
+            className="gallery-arrow"
+            onClick={() => goTo(slideIndex - 1)}
+            disabled={slideIndex === 0}
+            aria-label="previous"
+          >
+            <IconChevronLeft size={18} />
+          </button>
+
+          <p className="gallery-meta-name">
+            {slide.name}
+            {slides.length > 1 && (
+              <span className="gallery-meta-count"> {slideIndex + 1} / {slides.length}</span>
+            )}
+          </p>
+
+          <button
+            type="button"
+            className="gallery-arrow"
+            onClick={() => goTo(slideIndex + 1)}
+            disabled={slideIndex === slides.length - 1}
+            aria-label="next"
+          >
+            <IconChevronRight size={18} />
+          </button>
+        </div>
+
+        {slide.type === 'photo' && <p className="explorer-caption">{slide.text}</p>}
       </div>
     </div>
   )
@@ -418,6 +599,9 @@ function About() {
   const [expandedSkillId, setExpandedSkillId] = useState(null)
   const expandedSkill = unlistedSkills.find(s => s.id === expandedSkillId) || null
 
+  // on phones the panel opens under the card you tapped, on bigger screens it's one shared panel below the row
+  const isStacked = useMatchMedia('(max-width: 768px)')
+
   // keeps rendering the last-open skill's content during the close animation,
   // so the panel doesn't go blank before it finishes collapsing
   const [panelSkill, setPanelSkill] = useState(null)
@@ -460,6 +644,26 @@ function About() {
 
   const topTracksLeft = topTracks.slice(0, 5)
   const topTracksRight = topTracks.slice(5, 10)
+
+  const renderTrack = (track) => (
+    <a
+      key={track.rank}
+      href={track.url}
+      target="_blank"
+      rel="noreferrer"
+      className="spotify-track-row"
+    >
+      <span className="spotify-track-rank">{track.rank}</span>
+      <div className="spotify-track-thumb">
+        {track.photo ? <img src={track.photo} alt={track.title} /> : <span>📷</span>}
+      </div>
+      <div className="spotify-track-info">
+        <p className="spotify-track-title">{track.title}</p>
+        <p className="spotify-track-artist">{track.artist}</p>
+      </div>
+      <span className="spotify-track-link-icon">↗</span>
+    </a>
+  )
 
   // skips the type/reveal animation on revisits within the same tab session
   const aboutPlayed = () => sessionStorage.getItem('aboutTerminalPlayed') === 'true'
@@ -692,74 +896,42 @@ function About() {
                   <h2 className="section-heading">Most Played on Spotify</h2>
 
                   <div className="spotify-featured-row">
-                    <div className="spotify-featured-card">
-                      <div className="spotify-avatar-circle">
+                    <div className="spotify-chip">
+                      <div className="spotify-chip-art spotify-chip-art-round">
                         {topArtist?.photo ? (
                           <img src={topArtist.photo} alt={topArtist.name} />
                         ) : (
                           <span>📷</span>
                         )}
                       </div>
-                      <p className="spotify-featured-label">Top Artist</p>
-                      <p className="spotify-featured-name">{topArtist?.name}</p>
+                      <div className="spotify-chip-info">
+                        <p className="spotify-featured-label">Top Artist</p>
+                        <p className="spotify-featured-name">{topArtist?.name}</p>
+                      </div>
                     </div>
 
-                    <div className="spotify-featured-card">
-                      <div className="spotify-album-square">
+                    <div className="spotify-chip">
+                      <div className="spotify-chip-art">
                         {topSong?.photo ? (
                           <img src={topSong.photo} alt={topSong.title} />
                         ) : (
                           <span>📷</span>
                         )}
                       </div>
-                      <p className="spotify-featured-label">Top Song</p>
-                      <p className="spotify-featured-name">{topSong?.title}</p>
-                      <p className="spotify-featured-sub">{topSong?.artist}</p>
+                      <div className="spotify-chip-info">
+                        <p className="spotify-featured-label">Top Song</p>
+                        <p className="spotify-featured-name">{topSong?.title}</p>
+                        <p className="spotify-featured-sub">{topSong?.artist}</p>
+                      </div>
                     </div>
                   </div>
 
                   <div className="spotify-top-list">
                     <div className="spotify-top-column">
-                      {topTracksLeft.map(track => (
-                        <a
-                          key={track.rank}
-                          href={track.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="spotify-track-row"
-                        >
-                          <span className="spotify-track-rank">{track.rank}</span>
-                          <div className="spotify-track-thumb">
-                            {track.photo ? <img src={track.photo} alt={track.title} /> : <span>📷</span>}
-                          </div>
-                          <div className="spotify-track-info">
-                            <p className="spotify-track-title">{track.title}</p>
-                            <p className="spotify-track-artist">{track.artist}</p>
-                          </div>
-                          <span className="spotify-track-link-icon">↗</span>
-                        </a>
-                      ))}
+                      {topTracksLeft.map(renderTrack)}
                     </div>
                     <div className="spotify-top-column">
-                      {topTracksRight.map(track => (
-                        <a
-                          key={track.rank}
-                          href={track.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="spotify-track-row"
-                        >
-                          <span className="spotify-track-rank">{track.rank}</span>
-                          <div className="spotify-track-thumb">
-                            {track.photo ? <img src={track.photo} alt={track.title} /> : <span>📷</span>}
-                          </div>
-                          <div className="spotify-track-info">
-                            <p className="spotify-track-title">{track.title}</p>
-                            <p className="spotify-track-artist">{track.artist}</p>
-                          </div>
-                          <span className="spotify-track-link-icon">↗</span>
-                        </a>
-                      ))}
+                      {topTracksRight.map(renderTrack)}
                     </div>
                   </div>
 
@@ -781,6 +953,7 @@ function About() {
                 <>
                   <h2 className="section-heading">Life Outside the Code</h2>
                   <HobbyExplorer />
+                  <HobbyGallery />
                 </>
               )}
             </div>
@@ -800,21 +973,36 @@ function About() {
 
                   <div className="unlisted-skills-grid">
                     {unlistedSkills.map(skill => (
-                      <SkillCard
-                        key={skill.id}
-                        skill={skill}
-                        isOpen={skill.id === expandedSkillId}
-                        onToggle={() => handleSkillClick(skill)}
-                      />
+                      <Fragment key={skill.id}>
+                        <SkillCard
+                          skill={skill}
+                          isOpen={skill.id === expandedSkillId}
+                          onToggle={() => handleSkillClick(skill)}
+                        />
+
+                        {/* phones: each card gets its own panel right under it */}
+                        {isStacked && (
+                          <div
+                            className={`unlisted-skill-panel accent-${skill.accent} ${skill.id === expandedSkillId ? 'unlisted-skill-panel-open' : ''}`}
+                          >
+                            <div className="unlisted-skill-panel-inner">
+                              {panelSkill?.id === skill.id && <SkillDetails skill={panelSkill} />}
+                            </div>
+                          </div>
+                        )}
+                      </Fragment>
                     ))}
 
-                    <div
-                      className={`unlisted-skill-panel ${expandedSkillId ? 'unlisted-skill-panel-open' : ''} ${panelSkill ? `accent-${panelSkill.accent}` : ''}`}
-                    >
-                      <div className="unlisted-skill-panel-inner">
-                        {panelSkill && <SkillDetails skill={panelSkill} />}
+                    {/* bigger screens: one shared panel under the whole row */}
+                    {!isStacked && (
+                      <div
+                        className={`unlisted-skill-panel ${expandedSkillId ? 'unlisted-skill-panel-open' : ''} ${panelSkill ? `accent-${panelSkill.accent}` : ''}`}
+                      >
+                        <div className="unlisted-skill-panel-inner">
+                          {panelSkill && <SkillDetails skill={panelSkill} />}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </>
               )}
