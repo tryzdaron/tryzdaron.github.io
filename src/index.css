@@ -5,7 +5,139 @@
 }
 
 
-/* ── Animations ───────────────────────────────────────── */
+/* theme colors. light is the default, dark kicks in when the button sets data-theme="dark" */
+
+:root {
+  color-scheme: light;
+
+  --bg: #EBEBEB;
+  --dots: #D0D0D0;
+  --surface: #F3F3F3;
+  --surface-deep: #F8F8F8;
+  --surface-sunken: #E0E0E0;
+  --surface-raised: #DFDFDF;
+
+  --border: #CACACA;
+  --border-soft: #D8D8D8;
+
+  --text: #2B2B2B;
+  --text-muted: #6B6B6B;
+  --text-dim: #858585;
+  --text-faint: #A0A0A0;
+
+  --blue: #005FB8;
+  --teal: #08705F;
+  --green: #33701E;
+  --sky: #0066B3;
+  --amber: #8A5700;
+  --error: #C62828;
+  --on-accent: #FFFFFF;
+
+  --tag-lang: hsl(17, 55%, 38%);
+  --tag-tool: hsl(0, 70%, 42%);
+  --tag-learn: hsl(55, 60%, 28%);
+
+  --heat-0: #E0E2E4;
+  --heat-1: #A9DCD0;
+  --heat-2: #6CC0AD;
+  --heat-3: #2F9F88;
+  --heat-4: #0B7A68;
+
+  --tint-blue: rgba(0, 95, 184, 0.08);
+  --tint-teal: rgba(8, 112, 95, 0.09);
+  --tint-amber: rgba(138, 87, 0, 0.09);
+  --tint-blue-soft: rgba(0, 95, 184, 0.05);
+  --tint-blue-line: rgba(0, 95, 184, 0.2);
+  --hover-tint: rgba(0, 0, 0, 0.04);
+
+  --shadow-soft: rgba(0, 0, 0, 0.1);
+  --shadow-strong: rgba(0, 0, 0, 0.18);
+  --overlay: rgba(0, 0, 0, 0.45);
+
+  --nav-glass: rgba(235, 235, 235, 0.8);
+  --icon-box: #C8C8C8;
+  --icon-glyph: #6B6B6B;
+
+  --footer-border: #CACACA;
+  --footer-bg: linear-gradient(
+    to bottom,
+    rgba(235, 235, 235, 0.1) 0%,
+    rgba(224, 224, 224, 0.6) 5%,
+    rgba(214, 214, 214, 0.95) 60%,
+    #D4D4D4 100%
+  );
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #1E1E1E;
+  --dots: #3a3a3a;
+  --surface: #252526;
+  --surface-deep: #1E1E1E;
+  --surface-sunken: #181818;
+  --surface-raised: #2D2D2D;
+
+  --border: #333333;
+  --border-soft: #2D2D2D;
+
+  --text: #D4D4D4;
+  --text-muted: #808080;
+  --text-dim: #6A6A6A;
+  --text-faint: #5A5A5A;
+
+  --blue: #569CD6;
+  --teal: #4EC9B0;
+  --green: #6A9955;
+  --sky: #9CDCFE;
+  --amber: #FFBD2E;
+  --error: #F44747;
+  --on-accent: #1E1E1E;
+
+  --tag-lang: hsl(17, 47%, 64%);
+  --tag-tool: hsl(0, 89%, 62%);
+  --tag-learn: hsl(60, 42%, 76%);
+
+  --heat-0: #2f3133;
+  --heat-1: #1d4b44;
+  --heat-2: #2b7d6d;
+  --heat-3: #3aa890;
+  --heat-4: #4EC9B0;
+
+  --tint-blue: rgba(86, 156, 214, 0.1);
+  --tint-teal: rgba(78, 201, 176, 0.1);
+  --tint-amber: rgba(255, 189, 46, 0.1);
+  --tint-blue-soft: rgba(86, 156, 214, 0.06);
+  --tint-blue-line: rgba(86, 156, 214, 0.2);
+  --hover-tint: rgba(255, 255, 255, 0.04);
+
+  --shadow-soft: rgba(0, 0, 0, 0.4);
+  --shadow-strong: rgba(0, 0, 0, 0.5);
+  --overlay: rgba(0, 0, 0, 0.7);
+
+  --nav-glass: rgba(24, 24, 24, 0.82);
+  --icon-box: #3a3d41;
+  --icon-glyph: #8b949e;
+
+  --footer-border: #1a1a1a;
+  --footer-bg: linear-gradient(
+    to bottom,
+    hsla(0, 0%, 11%, 0.1) 0%,
+    hsla(0, 0%, 10%, 0.4) 5%,
+    hsla(0, 0%, 4%, 0.92) 60%,
+    #000000 100%
+  );
+}
+
+/* short fade when the theme flips, so the colors dont snap. the button is left out so its own animation still plays */
+.theme-fading :not(.theme-toggle, .theme-toggle *),
+.theme-fading :not(.theme-toggle, .theme-toggle *)::before,
+.theme-fading :not(.theme-toggle, .theme-toggle *)::after {
+    transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, fill 0.35s ease, stroke 0.35s ease, opacity 0.5s ease !important;
+}
+
+
+/* animations */
 
 @keyframes bounce {
   0%, 100% {
@@ -59,14 +191,14 @@
 }
 
 
-/* ── Base ─────────────────────────────────────────────── */
+/* base */
 
 body {
-  background-color: #1E1E1E;
-  background-image: radial-gradient(circle, #3a3a3a 1.5px, transparent 1.5px);
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, var(--dots) 1.5px, transparent 1.5px);
   background-size: 24px 24px;
   font-family: 'JetBrains Mono', monospace;
-  color: #D4D4D4;
+  color: var(--text);
   background-position: center;
 }
 
@@ -88,7 +220,71 @@ html, body, #root {
 }
 
 
-/* ── Navbar ───────────────────────────────────────────── */
+/* theme button, floats on every page */
+
+.theme-toggle {
+  position: fixed;
+  left: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 900;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--blue);
+  box-shadow: 0 4px 14px var(--shadow-soft);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.08);
+  border-color: var(--blue);
+}
+
+.theme-toggle:active {
+  transform: scale(0.92);
+}
+
+.theme-toggle-icon {
+  position: absolute;
+  transition: transform 0.4s ease, opacity 0.3s ease;
+}
+
+/* light mode shows the moon (press it to go dark) */
+.theme-toggle-moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.theme-toggle-sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
+.theme-toggle-dark .theme-toggle-moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+
+.theme-toggle-dark .theme-toggle-sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle,
+  .theme-toggle-icon {
+    transition: none;
+  }
+}
+
+
+/* navbar */
 
 .navbar {
   position: relative;
@@ -97,15 +293,15 @@ html, body, #root {
   justify-content: space-between;
   height: 52px;
   padding: 0 8px 0 20px;
-  background-color: #181818;
-  border-bottom: 1px solid #2a2d30;
+  background-color: var(--surface-sunken);
+  border-bottom: 1px solid var(--border);
   font-family: 'JetBrains Mono', monospace;
   z-index: 999;
   transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
 }
 
 .navbar-fixed.navbar-glass {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 20px var(--shadow-soft);
 }
 
 .navbar-fixed.navbar-glass::before {
@@ -116,7 +312,7 @@ html, body, #root {
   pointer-events: none;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  background: rgba(24, 24, 24, 0.82);
+  background: var(--nav-glass);
 }
 
 .navbar-glass-a {
@@ -133,7 +329,7 @@ html, body, #root {
 
 .navbar-logo {
   align-self: center;
-  color: #569CD6;
+  color: var(--blue);
   font-size: 1.1rem;
   text-decoration: none;
 }
@@ -159,25 +355,25 @@ html, body, #root {
   padding: 0 16px;
   position: relative;
   z-index: 1;
-  color: #808080;
+  color: var(--text-muted);
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.2s ease;
 }
 
 .navbar-link:hover {
-  color: #4EC9B0;
+  color: var(--teal);
 }
 
 .navbar-link-active {
-  color: #D4D4D4;
+  color: var(--text);
 }
 
 .navbar-tab-fill {
   position: absolute;
   bottom: 0;
   height: 100%;
-  background-color: #252526;
+  background-color: var(--surface);
   border-radius: 8px 8px 0 0;
   transition: left 0.3s ease, width 0.3s ease, opacity 0.3s ease;
   pointer-events: none;
@@ -187,8 +383,8 @@ html, body, #root {
   width: 16px;
   height: 16px;
   flex: none;
-  color: #3a3d41;
-  --g: #8b949e; /* color of the >_ part, separate from the box */
+  color: var(--icon-box);
+  --g: var(--icon-glyph); /* color of the >_ part, separate from the box */
 }
 
 .tab-icon path {
@@ -196,8 +392,8 @@ html, body, #root {
 }
 
 .navbar-link-active .tab-icon {
-  color: #4EC9B0;
-  --g: #1E1E1E;
+  color: var(--teal);
+  --g: var(--bg);
 }
 
 .navbar-hamburger {
@@ -213,8 +409,8 @@ html, body, #root {
   top: 100%;
   left: 0;
   width: 100%;
-  background-color: #181818;
-  border-bottom: 1px solid #333333;
+  background-color: var(--surface-sunken);
+  border-bottom: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   padding: 6px;
@@ -227,7 +423,24 @@ html, body, #root {
 }
 
 .navbar-mobile-menu .navbar-link-active {
-  background-color: #252526;
+  background-color: var(--surface);
+}
+
+.recaptcha-notice {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  margin-top: 14px;
+  text-align: center;
+}
+
+.recaptcha-notice a {
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+
+.recaptcha-notice a:hover {
+  color: var(--teal);
 }
 
 @media (max-width: 768px) {
@@ -246,7 +459,7 @@ html, body, #root {
 }
 
 
-/* ── Footer ───────────────────────────────────────────── */
+/* footer */
 
 .site-footer {
   padding: 60px 20px 45px;
@@ -261,19 +474,13 @@ html, body, #root {
   left: 0;
   width: 100%;
   height: 80px;
-  background: linear-gradient(to bottom, transparent, #1E1E1E);
+  background: linear-gradient(to bottom, transparent, var(--bg));
   pointer-events: none;
 }
 
 .footer-glass {
-  border-top: 1px solid #1a1a1a;
-  background: linear-gradient(
-    to bottom,
-    hsla(0, 0%, 11%, 0.1) 0%,
-    hsla(0, 0%, 10%, 0.4) 5%,
-    hsla(0, 0%, 4%, 0.92) 60%,
-    #000000 100%
-  );
+  border-top: 1px solid var(--footer-border);
+  background: var(--footer-bg);
 }
 
 .footer-glass::after {
@@ -297,7 +504,7 @@ html, body, #root {
   max-width: 1150px;
   margin: 0 auto;
   padding: 0px 24px 24px;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid var(--border);
 }
 
 .footer-nav {
@@ -307,14 +514,14 @@ html, body, #root {
 }
 
 .footer-nav-link {
-  color: #808080;
+  color: var(--text-muted);
   font-size: 0.85rem;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-nav-link:hover {
-  color: #D4D4D4;
+  color: var(--text);
 }
 
 .footer-socials {
@@ -324,13 +531,13 @@ html, body, #root {
 }
 
 .footer-social-link {
-  color: #569CD6;
+  color: var(--blue);
   display: flex;
   transition: color 0.2s ease;
 }
 
 .footer-social-link:hover {
-  color: #4EC9B0;
+  color: var(--teal);
 }
 
 .footer-bottom {
@@ -339,13 +546,13 @@ html, body, #root {
 }
 
 .footer-line {
-  color: #6A9955;
+  color: var(--green);
   font-size: 0.85rem;
   margin-bottom: 8px;
 }
 
 .footer-copyright {
-  color: #6A6A6A;
+  color: var(--text-dim);
   font-size: 0.75rem;
 }
 
@@ -359,7 +566,12 @@ html, body, #root {
     justify-content: space-between;
     align-items: flex-start;
     gap: 16px;
-    padding: 0 0 20px;
+    padding: 0 12px 20px;
+  }
+
+  .site-footer::before {
+    top: -20px;
+    height: 20px;
   }
 
   .footer-nav {
@@ -374,4 +586,8 @@ html, body, #root {
   .footer-line {
     font-size: 0.8rem;
   }
+}
+
+.grecaptcha-badge {
+  visibility: hidden;
 }

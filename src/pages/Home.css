@@ -11,13 +11,36 @@
   position: relative;
 }
 
-.avatar {
+/* both photos sit on top of each other, the theme decides which one is visible */
+.avatar-wrap {
+  position: relative;
   width: 300px;
   height: 300px;
+  flex-shrink: 0;
+  order: -1; /* picture on top when the hero is stacked */
+}
+
+.avatar {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #569CD6;
-  order: -1; /* picture on top when the hero is stacked */
+  border: 3px solid var(--blue);
+  transition: opacity 0.5s ease;
+}
+
+.avatar-night {
+  opacity: 0;
+}
+
+:root[data-theme='dark'] .avatar-day {
+  opacity: 0;
+}
+
+:root[data-theme='dark'] .avatar-night {
+  opacity: 1;
 }
 
 .hero-right {
@@ -45,7 +68,7 @@
     align-items: flex-start;
   }
 
-  .avatar {
+  .avatar-wrap {
     order: 0;
   }
 
@@ -57,17 +80,18 @@
 .terminal {
   width: 100%;
   max-width: 600px;
-  background-color: #252526;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 40px var(--shadow-strong);
 }
 
 .terminal-bar {
   display: flex;
   gap: 8px;
   padding: 12px 16px;
-  background-color: #333333;
+  background-color: var(--border);
 }
 
 .dot {
@@ -87,23 +111,23 @@
 
 .terminal-line {
   font-size: 1.1rem;
-  color: #569CD6;
+  color: var(--blue);
   margin-bottom: 16px;
 }
 
 .cursor {
   animation: blink 1s step-end infinite;
-  color: #D4D4D4;
+  color: var(--text);
 }
 
 .terminal-sub {
-  color: #6A9955;
+  color: var(--green);
   font-size: 0.9rem;
   margin-bottom: 6px;
 }
 
 .terminal-output {
-  color: #4EC9B0;
+  color: var(--teal);
   font-size: 0.95rem;
   margin-top: 12px;
 }
@@ -116,9 +140,9 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background-color: #252526;
-  border: 2px solid #569CD6;
-  color: #D4D4D4;
+  background-color: var(--surface);
+  border: 2px solid var(--blue);
+  color: var(--text);
   font-size: 1.3rem;
   cursor: pointer;
   display: flex;
@@ -129,14 +153,14 @@
 }
 
 .scroll-arrow:hover {
-  background-color: #569CD6;
-  color: #1E1E1E;
-  border-color: #569CD6;
+  background-color: var(--blue);
+  color: var(--on-accent);
+  border-color: var(--blue);
   transform: scale(1.1);
 }
 
 
-/* ── About teaser ─────────────────────────────────────── */
+/* about teaser */
 
 .about-teaser {
   max-width: 700px;
@@ -154,10 +178,10 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background-color: #2D2D2D;
+  background-color: var(--surface-raised);
   border-radius: 6px 6px 0 0;
   padding: 8px 16px;
-  border: 1px solid #333333;
+  border: 1px solid var(--border);
   border-bottom: none;
 }
 
@@ -165,24 +189,24 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #6A6A6A;
+  background-color: var(--text-dim);
 }
 
 .tab-label {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
-  color: #9CDCFE;
+  color: var(--sky);
 }
 
 .about-content {
-  background-color: #252526;
-  border: 1px solid #333333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 0 8px 8px 8px;
   padding: 24px 20px;
 }
 
 .about-narrative {
-  color: #D4D4D4;
+  color: var(--text);
   font-size: 0.95rem;
   line-height: 1.6;
   margin-bottom: 16px;
@@ -204,19 +228,19 @@
 }
 
 .code-editor {
-  background-color: #252526;
-  border: 1px solid #333333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .code-editor-tab {
   padding: 10px 20px;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid var(--border);
 }
 
 .code-editor-path {
-  color: #569CD6;
+  color: var(--blue);
   font-size: 0.9rem;
 }
 
@@ -229,8 +253,8 @@
   display: flex;
   flex-direction: column;
   padding: 24px 12px;
-  border-right: 1px solid #333333;
-  color: #5A5A5A;
+  border-right: 1px solid var(--border);
+  color: var(--text-faint);
   font-size: 0.8rem;
   line-height: 1.8rem;
   text-align: right;
@@ -253,11 +277,11 @@
 .terminal-block:not(:last-child) {
   padding-bottom: 24px;
   margin-bottom: 24px;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid var(--border);
 }
 
 .json-key {
-  color: #9CDCFE;
+  color: var(--sky);
   font-size: 0.9rem;
   margin-bottom: 10px;
 }
@@ -273,8 +297,8 @@
 }
 
 .skill-card {
-  background-color: #1E1E1E;
-  border: 1px solid #333333;
+  background-color: var(--surface-deep);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 16px;
   opacity: 0;
@@ -288,7 +312,7 @@
 
 .skill-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 20px var(--shadow-soft);
 }
 
 .tag-row {
@@ -315,18 +339,18 @@
 .tag-pill:nth-child(7) { animation-delay: 0.65s; }
 
 .tag-pill.lang {
-  color: hsl(17, 47%, 64%);
-  border-color: hsl(17, 47%, 64%);
+  color: var(--tag-lang);
+  border-color: var(--tag-lang);
 }
 
 .tag-pill.tool {
-  color: hsl(0, 89%, 62%);
-  border-color: hsl(0, 89%, 62%);
+  color: var(--tag-tool);
+  border-color: var(--tag-tool);
 }
 
 .tag-pill.learn {
-  color: hsl(60, 42%, 76%);
-  border-color: hsl(60, 42%, 76%);
+  color: var(--tag-learn);
+  border-color: var(--tag-learn);
 }
 
 .more-projects-btn {
@@ -342,16 +366,16 @@
 
 .service-symbol {
   font-size: 1.4rem;
-  color: #569CD6;
+  color: var(--blue);
 }
 
 .service-desc {
-  color: #808080;
+  color: var(--text-muted);
   font-size: 0.85rem;
 }
 
 .service-link {
-  color: #4EC9B0;
+  color: var(--teal);
   font-size: 0.85rem;
   text-decoration: none;
   margin-top: 4px;
@@ -367,7 +391,7 @@
 }
 
 
-/* ── GitHub activity ───────────────────────────────────── */
+/* github activity */
 
 .github-stats-img {
   display: block;
@@ -377,13 +401,22 @@
   border-radius: 6px;
 }
 
+/* two versions of the stats image, only the one for the current theme shows */
+:root[data-theme='dark'] .github-stats-light {
+  display: none;
+}
+
+:root:not([data-theme='dark']) .github-stats-dark {
+  display: none;
+}
+
 .github-graph-img {
   max-width: 700px;
 }
 
 .heatmap-card {
-  background-color: #252526;
-  border: 1px solid #333333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px 14px;
   width: fit-content;
@@ -392,7 +425,7 @@
 }
 
 .heatmap-title {
-  color: #D4D4D4;
+  color: var(--text);
   font-size: 0.8rem;
   margin-bottom: 8px;
 }
@@ -413,7 +446,7 @@
   left: 26px;
   height: 12px;
   font-size: 0.65rem;
-  color: #808080;
+  color: var(--text-muted);
 }
 
 .heatmap-months span {
@@ -430,7 +463,7 @@
   gap: 2px;
   font-size: 0.65rem;
   line-height: 10px;
-  color: #808080;
+  color: var(--text-muted);
 }
 
 .heatmap-grid {
@@ -448,11 +481,11 @@
 }
 
 .heatmap-pad { background: transparent; }
-.heatmap-level-0 { background: #2f3133; }
-.heatmap-level-1 { background: #1d4b44; }
-.heatmap-level-2 { background: #2b7d6d; }
-.heatmap-level-3 { background: #3aa890; }
-.heatmap-level-4 { background: #4EC9B0; }
+.heatmap-level-0 { background: var(--heat-0); }
+.heatmap-level-1 { background: var(--heat-1); }
+.heatmap-level-2 { background: var(--heat-2); }
+.heatmap-level-3 { background: var(--heat-3); }
+.heatmap-level-4 { background: var(--heat-4); }
 
 .heatmap-legend {
   display: flex;
@@ -461,17 +494,17 @@
   gap: 3px;
   margin-top: 8px;
   font-size: 0.65rem;
-  color: #808080;
+  color: var(--text-muted);
 }
 
 .heatmap-note {
-  color: #808080;
+  color: var(--text-muted);
   font-size: 0.85rem;
   text-align: center;
 }
 
 
-/* ── Contact / note tabs ───────────────────────────────── */
+/* contact / note tabs */
 
 .contact-banner {
   max-width: 700px;
@@ -483,14 +516,14 @@
   display: flex;
   gap: 24px;
   margin-bottom: 24px;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid var(--border);
 }
 
 .contact-tab {
   font-family: 'JetBrains Mono', monospace;
   background: transparent;
   border: none;
-  color: #6A6A6A;
+  color: var(--text-dim);
   font-size: 0.9rem;
   padding: 0 0 10px 0;
   cursor: pointer;
@@ -498,17 +531,17 @@
 }
 
 .contact-tab:not(:last-child) {
-  border-right: 1px solid #333333;
+  border-right: 1px solid var(--border);
   padding-right: 24px;
 }
 
 .contact-tab:hover {
-  color: #D4D4D4;
+  color: var(--text);
 }
 
 .contact-tab-active {
-  color: #569CD6;
-  box-shadow: 0 2px 0 0 #569CD6;
+  color: var(--blue);
+  box-shadow: 0 2px 0 0 var(--blue);
 }
 
 /* honeypot — real users never see or interact with this */
@@ -522,7 +555,7 @@
 }
 
 
-/* ── Mobile ────────────────────────────────────────────── */
+/* mobile */
 
 @media (max-width: 600px) {
   /* hero: avatar on top, extra bottom padding so the arrow has its own space */
@@ -535,7 +568,7 @@
     gap: 20px;
   }
 
-  .avatar {
+  .avatar-wrap {
     width: 240px;
     height: 240px;
   }
@@ -545,7 +578,6 @@
     min-height: 0;
   }
 
-  /* keeps room for two lines so the box doesnt jump when the typing wraps */
   .terminal-line {
     font-size: 1rem;
     margin-bottom: 10px;
@@ -674,7 +706,7 @@
     grid-template-columns: 1fr;
   }
 
-  .skill-card{
+  .skill-card {
     padding-block: 24px;
   }
 }

@@ -7,12 +7,14 @@ import Services from './pages/Services'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import ScrollToTop from './components/ScrollToTop'
+import ThemeToggle from './components/ThemeToggle'
 
 function App() {
   return (
     <HashRouter>
       <Navbar />
       <ScrollToTop />
+      <ThemeToggle />
 
       <main className="page-content">
         <Routes>

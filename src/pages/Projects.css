@@ -15,11 +15,11 @@
 }
 
 .project-outcome-done {
-  color: #4EC9B0;
+  color: var(--teal);
 }
 
 .project-outcome-progress {
-  color: #FFBD2E;
+  color: var(--amber);
 }
 
 @media (max-width: 600px) {

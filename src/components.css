@@ -1,8 +1,8 @@
 .about-btn {
   font-family: 'JetBrains Mono', monospace;
   background: transparent;
-  border: 1px solid #569CD6;
-  color: #569CD6;
+  border: 1px solid var(--blue);
+  color: var(--blue);
   padding: 10px 24px;
   border-radius: 4px;
   font-size: 0.95rem;
@@ -11,24 +11,24 @@
 }
 
 .about-btn:hover {
-  background-color: #569CD6;
-  color: #1E1E1E;
+  background-color: var(--blue);
+  color: var(--on-accent);
   transform: scale(1.05);
 }
 
 .prompt {
-  color: #4EC9B0;
+  color: var(--teal);
   margin-right: 8px;
 }
 
 .command-line {
-  color: #4EC9B0;
+  color: var(--teal);
   font-size: 1rem;
   margin-bottom: 8px;
 }
 
 .section-heading {
-  color: #D4D4D4;
+  color: var(--text);
   font-size: 1.4rem;
   margin-top: 16px;
   margin-bottom: 12px;
@@ -37,14 +37,14 @@
 }
 
 .terminal-success {
-  color: #4EC9B0;
+  color: var(--teal);
   margin-top: 20px;
   font-size: 0.9rem;
   animation: fadeDropIn 0.4s ease;
 }
 
 .code-comment {
-  color: #6A9955;
+  color: var(--green);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
   margin-top: 20px;
@@ -71,9 +71,9 @@
 }
 
 .project-card {
-  background-color: #1E1E1E;
-  border: 1px solid #333333;
-  border-left: 2px solid #569CD6;
+  background-color: var(--surface-deep);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--blue);
   border-radius: 0 6px 6px 0;
   padding: 12px 16px;
   cursor: default;
@@ -89,13 +89,11 @@
 .project-card:nth-child(4) { animation-delay: 0.55s; }
 
 .project-card:hover {
-  border-left-color: #4EC9B0;
-  background-color: #2a2a2b;
+  border-left-color: var(--teal);
+  background-color: var(--surface);
   transform: translateY(-6px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 20px var(--shadow-soft);
 }
-
-/* paste this right under .project-card:hover in the file that has .project-card */
 
 .project-card-open:hover {
   transform: none;
@@ -106,7 +104,7 @@
 }
 
 .project-card-head:focus-visible {
-  outline: 1px solid #569CD6;
+  outline: 1px solid var(--blue);
   outline-offset: 4px;
 }
 
@@ -134,7 +132,7 @@
 }
 
 .project-details-body {
-  border-top: 1px solid #333333;
+  border-top: 1px solid var(--border);
   margin-top: 12px;
   padding-top: 12px;
   font-size: 0.85rem;
@@ -142,26 +140,26 @@
 }
 
 .project-commit {
-  color: #FFBD2E;
+  color: var(--amber);
 }
 
 .project-commit-head {
-  color: #4EC9B0;
+  color: var(--teal);
 }
 
 .project-line {
   margin-top: 6px;
-  color: #D4D4D4;
+  color: var(--text);
 }
 
 .project-line-label {
-  color: #569CD6;
+  color: var(--blue);
 }
 
 .project-visit-link {
   display: inline-block;
   margin-top: 10px;
-  color: #4EC9B0;
+  color: var(--teal);
   text-decoration: none;
 }
 
@@ -181,26 +179,42 @@
 }
 
 .project-title {
-  color: #D4D4D4;
+  color: var(--text);
   font-size: 0.95rem;
   margin-bottom: 4px;
 }
 
 .project-desc {
-  color: #808080;
+  color: var(--text-muted);
   font-size: 0.85rem;
 }
 
 .project-view-hint {
-  color: #4EC9B0;
+  color: var(--teal);
   font-size: 0.85rem;
   display: inline-block;
   margin-top: 6px;
 }
 
+/* title on the left, status badge on the right */
+.project-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.project-card-top .project-title {
+  min-width: 0;
+}
+
+.project-card-top .status-pill {
+  flex-shrink: 0;
+}
+
 .contact-box {
-  background-color: #252526;
-  border: 1px solid #333333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px;
 }
@@ -215,32 +229,32 @@
 }
 
 .cta-flag-key {
-  color: #569CD6;
+  color: var(--blue);
 }
 
 .cta-flag-value {
-  color: #4EC9B0;
+  color: var(--teal);
 }
 
 .cta-text {
-  color: #D4D4D4;
+  color: var(--text);
   font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 24px;
 }
 
 .note-subtext {
-  color: #808080;
+  color: var(--text-muted);
   font-size: 0.85rem;
   margin-bottom: 16px;
 }
 
 .note-textarea {
   width: 100%;
-  background-color: #1E1E1E;
-  border: 1px solid #333333;
+  background-color: var(--surface-deep);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #D4D4D4;
+  color: var(--text);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.9rem;
   padding: 12px;
@@ -250,7 +264,7 @@
 
 .note-textarea:focus {
   outline: none;
-  border-color: #569CD6;
+  border-color: var(--blue);
 }
 
 .note-status {
@@ -259,11 +273,11 @@
 }
 
 .note-status-success {
-  color: #4EC9B0;
+  color: var(--teal);
 }
 
 .note-status-error {
-  color: #F44747;
+  color: var(--error);
 }
 
 .modal-overlay {
@@ -272,7 +286,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -283,16 +297,16 @@
 .project-modal {
   width: 90%;
   max-width: 500px;
-  background-color: #252526;
+  background-color: var(--surface);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 40px var(--shadow-strong);
   animation: zoomIn 0.2s ease;
   text-align: left;
 }
 
 .modal-browser-frame {
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid var(--border);
 }
 
 .modal-browser-bar {
@@ -300,12 +314,12 @@
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background-color: #333333;
+  background-color: var(--border);
 }
 
 .modal-browser-url {
   margin-left: 8px;
-  color: #808080;
+  color: var(--text-muted);
   font-size: 0.8rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -338,14 +352,14 @@
 }
 
 .modal-title {
-  color: hsl(0, 89%, 62%);
+  color: var(--tag-tool);
   font-size: 0.9rem;
 }
 
 .modal-close {
   background: transparent;
   border: none;
-  color: #D4D4D4;
+  color: var(--text);
   font-size: 1rem;
   cursor: pointer;
   padding: 4px 8px;
@@ -353,12 +367,12 @@
 }
 
 .modal-close:hover {
-  color: #F44747;
+  color: var(--error);
 }
 
 .modal-visit-link {
   display: inline-block;
-  color: #4EC9B0;
+  color: var(--teal);
   font-size: 0.85rem;
   text-decoration: none;
   margin-bottom: 16px;
@@ -373,9 +387,9 @@
   font-size: 0.75rem;
   padding: 2px 10px;
   border-radius: 999px;
-  border: 1px solid #FFBD2E;
-  color: #FFBD2E;
-  background: rgba(255, 189, 46, 0.08);
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  background: var(--tint-amber);
   white-space: nowrap;
 }
 
@@ -384,19 +398,19 @@
 }
 
 .detail-label {
-  color: #6A9955;
+  color: var(--green);
   font-size: 0.85rem;
   margin-bottom: 4px;
 }
 
 .detail-text {
-  color: #D4D4D4;
+  color: var(--text);
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
 .tags-label {
-  color: #6A9955;
+  color: var(--green);
   font-size: 0.85rem;
   margin-top: 16px;
   margin-bottom: 8px;
@@ -409,9 +423,9 @@
 }
 
 .project-tag {
-  background-color: #333333;
-  color: #4EC9B0;
-  border: 1px solid #4EC9B0;
+  background-color: var(--surface-raised);
+  color: var(--teal);
+  border: 1px solid var(--teal);
   padding: 4px 12px;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -437,25 +451,9 @@
     font-size: 0.8rem;
   }
 
-    .project-view-hint {
+  .project-view-hint {
     font-size: 0.8rem;
   }
-
-  /* title on the left, status badge on the right */
-.project-card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.project-card-top .project-title {
-  min-width: 0;
-}
-
-.project-card-top .status-pill {
-  flex-shrink: 0;
-}
 
   .project-commit {
     font-size: 0.8rem;
@@ -467,7 +465,7 @@
     padding: 3px 8px;
   }
 
-    .contact-box {
+  .contact-box {
     padding: 16px;
   }
 

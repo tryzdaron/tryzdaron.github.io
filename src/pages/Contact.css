@@ -15,7 +15,7 @@
 }
 
 .contact-page-subtext {
-  color: #808080;
+  color: var(--text-muted);
   font-size: 0.95rem;
   margin-top: 8px;
 }
@@ -37,8 +37,8 @@
 }
 
 .contact-form-card {
-  background-color: #252526;
-  border: 1px solid #333333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 28px 24px;
   width: 100%;
@@ -53,10 +53,10 @@
 .form-input {
   display: block;
   width: 100%;
-  background-color: #1E1E1E;
-  border: 1px solid #333333;
+  background-color: var(--surface-deep);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #D4D4D4;
+  color: var(--text);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.9rem;
   padding: 10px 12px;
@@ -65,20 +65,20 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #569CD6;
+  border-color: var(--blue);
 }
 
 .contact-note-toggle-wrap {
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px dashed #333333;
+  border-top: 1px dashed var(--border);
   text-align: center;
 }
 
 .contact-note-toggle {
   background: transparent;
   border: none;
-  color: #6A9955;
+  color: var(--green);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
   cursor: pointer;
@@ -90,7 +90,7 @@
 }
 
 .contact-note-toggle:hover {
-  color: #4EC9B0;
+  color: var(--teal);
 }
 
 .contact-note-reveal {
@@ -107,8 +107,8 @@
 }
 
 .contact-status-card {
-  background-color: #252526;
-  border: 1px solid #333333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 20px;
 }
@@ -117,7 +117,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #D4D4D4;
+  color: var(--text);
   font-size: 0.9rem;
   margin: 12px 0;
 }
@@ -135,17 +135,17 @@
 }
 
 .status-dot-inactive {
-  background-color: #6A6A6A;
+  background-color: var(--text-dim);
 }
 
 .contact-status-detail {
-  color: #808080;
+  color: var(--text-muted);
   font-size: 0.85rem;
   margin-bottom: 6px;
 }
 
 .contact-status-note {
-  color: #6A6A6A;
+  color: var(--text-dim);
   font-size: 0.8rem;
   margin-top: 12px;
 }
@@ -153,8 +153,8 @@
 .confirm-modal {
   width: 90%;
   max-width: 420px;
-  background-color: #252526;
-  border: 1px solid #333333;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px 20px;
   animation: zoomIn 0.2s ease;
@@ -175,13 +175,13 @@
 }
 
 .confirm-modal-cancel {
-  border-color: #6A6A6A;
-  color: #6A6A6A;
+  border-color: var(--text-dim);
+  color: var(--text-dim);
 }
 
 .confirm-modal-cancel:hover {
-  background-color: #6A6A6A;
-  color: #1E1E1E;
+  background-color: var(--text-dim);
+  color: var(--on-accent);
 }
 
 @media (max-width: 768px) {
@@ -231,7 +231,7 @@
     padding: 16px 14px;
   }
 
-  /* 1rem on purpose, see the note below */
+  /* 1rem on purpose, iphone safari zooms in on inputs under 16px */
   .contact-form-card .form-input,
   .contact-form-card .note-textarea {
     font-size: 1rem;

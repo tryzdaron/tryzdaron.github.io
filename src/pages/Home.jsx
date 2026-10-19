@@ -7,6 +7,8 @@ import ProjectCard from '../components/ProjectCard'
 import './Home.css'
 import { submitContactForm } from '../lib/api'
 import ContributionHeatmap from '../components/ContributionHeatmap'
+import RecaptchaNotice from '../components/RecaptchaNotice'
+import nightAvatar from '../assets/Images/night-avatar.png'
 
 function Home() {
 
@@ -421,7 +423,10 @@ function Home() {
           </div>
           <Link to="/about" className="about-btn">About Me →</Link>
         </div>
-        <img src={avatar} alt="Tryz Daron Odasco" className="avatar" />
+          <div className="avatar-wrap">
+            <img src={avatar} alt="Tryz Daron Odasco" className="avatar avatar-day" />
+            <img src={nightAvatar} alt="" aria-hidden="true" className="avatar avatar-night" />
+          </div>
         <button
           className="scroll-arrow"
           onClick={() => aboutTeaserRef.current?.scrollIntoView({ behavior: 'smooth' })}
@@ -598,8 +603,13 @@ function Home() {
                   {githubGridVisible && (
                     <>
                       <img
-                        className="github-stats-img"
+                        className="github-stats-img github-stats-dark"
                         src="https://github-readme-stats-iota-eight-71.vercel.app/api?username=tryzdaron&show_icons=true&theme=dark&bg_color=252526&title_color=569CD6&icon_color=4EC9B0&text_color=D4D4D4&border_color=333333"
+                        alt="GitHub stats"
+                      />
+                      <img
+                        className="github-stats-img github-stats-light"
+                        src="https://github-readme-stats-iota-eight-71.vercel.app/api?username=tryzdaron&show_icons=true&bg_color=F3F3F3&title_color=005FB8&icon_color=08705F&text_color=2B2B2B&border_color=CACACA"
                         alt="GitHub stats"
                       />
 
@@ -675,6 +685,7 @@ function Home() {
                   {noteStatus === 'sending' ? 'sending...' : 'send →'}
                 </button>
               </form>
+              <RecaptchaNotice />
               {noteStatus === 'sent' && <p className="note-status note-status-success">✓ sent, thanks.</p>}
               {noteStatus === 'error' && <p className="note-status note-status-error">something went wrong, try again.</p>}
               {noteStatus === 'cooldown' && <p className="note-status note-status-error">you already sent a note recently — try again in a bit.</p>}

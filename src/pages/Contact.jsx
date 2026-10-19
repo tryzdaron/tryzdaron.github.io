@@ -5,6 +5,7 @@ import siteStatus from '../data/siteStatus'
 import services from '../data/services'
 import { submitContactForm } from '../lib/api'
 import './Contact.css'
+import RecaptchaNotice from '../components/RecaptchaNotice'
 
 function Contact() {
   const [searchParams] = useSearchParams()
@@ -238,6 +239,7 @@ function Contact() {
                 {showAnonymousNote ? '> back to contact.sh' : '> optional: leave an anonymous note'}
               </button>
             </div>
+            <RecaptchaNotice />
           </div>
         </div>
 
