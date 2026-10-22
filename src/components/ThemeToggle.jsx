@@ -13,7 +13,6 @@ function ThemeToggle() {
     root.classList.add('theme-fading')
     root.dataset.theme = nextTheme
     setTheme(nextTheme)
-    localStorage.setItem('theme', nextTheme)
 
     setTimeout(() => root.classList.remove('theme-fading'), 400)
   }
