@@ -5,7 +5,8 @@ import {
   IconMail,
   IconBrandFacebook,
   IconBrandInstagram,
-  IconBrandTiktok
+  IconBrandTiktok,
+  IconBrandDiscord
 } from '@tabler/icons-react'
 
 function Footer() {
@@ -21,9 +22,9 @@ function Footer() {
     { label: 'GitHub', url: 'https://github.com/tryzdaron', icon: IconBrandGithub },
     { label: 'LinkedIn', url: 'https://www.linkedin.com/in/tryz-daron-odasco-456323419/', icon: IconBrandLinkedin },
     { label: 'Email', url: 'mailto:tryzdaron28@gmail.com', icon: IconMail },
-    { label: 'Facebook', url: 'https://www.facebook.com/daron.odasco', icon: IconBrandFacebook },
     { label: 'Instagram', url: 'https://instagram.com/deyhonnn/', icon: IconBrandInstagram },
-    { label: 'TikTok', url: 'https://tiktok.com/@tryz_daron', icon: IconBrandTiktok }
+    { label: 'TikTok', url: 'https://tiktok.com/@tryz_daron', icon: IconBrandTiktok },
+    { label: 'Discord', url: 'https://discord.com/users/1525401914249056284', icon: IconBrandDiscord }
   ]
 
   return (
