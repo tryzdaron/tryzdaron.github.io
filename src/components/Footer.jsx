@@ -19,11 +19,11 @@ function Footer() {
 
   const socialLinks = [
     { label: 'GitHub', url: 'https://github.com/tryzdaron', icon: IconBrandGithub },
-    { label: 'LinkedIn', url: 'https://linkedin.com/in/YOUR-HANDLE', icon: IconBrandLinkedin },
-    { label: 'Email', url: 'mailto:YOUR-EMAIL@example.com', icon: IconMail },
-    { label: 'Facebook', url: 'https://facebook.com/YOUR-HANDLE', icon: IconBrandFacebook },
-    { label: 'Instagram', url: 'https://instagram.com/YOUR-HANDLE', icon: IconBrandInstagram },
-    { label: 'TikTok', url: 'https://tiktok.com/@YOUR-HANDLE', icon: IconBrandTiktok }
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/in/tryz-daron-odasco-456323419/', icon: IconBrandLinkedin },
+    { label: 'Email', url: 'mailto:tryzdaron28@gmail.com', icon: IconMail },
+    { label: 'Facebook', url: 'https://www.facebook.com/daron.odasco', icon: IconBrandFacebook },
+    { label: 'Instagram', url: 'https://instagram.com/deyhonnn/', icon: IconBrandInstagram },
+    { label: 'TikTok', url: 'https://tiktok.com/@tryz_daron', icon: IconBrandTiktok }
   ]
 
   return (
