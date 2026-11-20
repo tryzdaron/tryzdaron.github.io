@@ -845,7 +845,7 @@ function About() {
         <h1 className="section-heading">About Me</h1>
       </div>
 
-      <section className="about-terminal" ref={terminalRef}>
+      <section className="about-terminal glass-box" ref={terminalRef}>
         <div className="terminal-bar">
           <span className="dot red"></span>
           <span className="dot yellow"></span>

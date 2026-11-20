@@ -127,7 +127,7 @@ function Contact() {
       <div className="contact-page-columns">
 
         <div className="contact-form-card-wrap">
-          <div className={`contact-form-card ${isRotated ? 'contact-form-card-flipped' : ''}`}>
+          <div className={`contact-form-card glass-box ${isRotated ? 'contact-form-card-flipped' : ''}`}>
             {showAnonymousNote ? (
               <>
                 <p className="note-subtext">fully anonymous — no name, no email, just say what's on your mind</p>
@@ -244,7 +244,7 @@ function Contact() {
         </div>
 
         <div className="contact-side-column">
-          <div className="contact-status-card">
+          <div className="contact-status-card glass-box">
             <p className="command-line">
               <span className="prompt">&gt;</span> status --check
             </p>

@@ -18,7 +18,6 @@
 /* shared terminal box, wraps all 4 sections, dots + tab bar rendered once */
 
 .about-terminal {
-  background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;

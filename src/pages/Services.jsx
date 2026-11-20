@@ -117,7 +117,7 @@ function Services() {
         ref={servicesListRef}
       >
         {services.map(service => (
-          <div key={service.title} className="service-block">
+          <div key={service.title} className="service-block glass-box">
             <div className="service-block-header">
               <p className="service-block-symbol">{service.symbol}</p>
               <h2 className="service-block-title">{service.title}</h2>

@@ -8,10 +8,12 @@ import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import ScrollToTop from './components/ScrollToTop'
 import ThemeToggle from './components/ThemeToggle'
+import DotBackground from './components/DotBackground'
 
 function App() {
   return (
     <HashRouter>
+      <DotBackground />
       <Navbar />
       <ScrollToTop />
       <ThemeToggle />

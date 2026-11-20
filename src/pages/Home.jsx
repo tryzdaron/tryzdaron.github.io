@@ -406,7 +406,7 @@ function Home() {
       {/* Hero */}
       <section className="hero">
         <div className="hero-right">
-          <div className="terminal">
+          <div className="terminal glass">
             <div className="terminal-bar">
               <span className="dot red"></span>
               <span className="dot yellow"></span>
@@ -446,7 +446,7 @@ function Home() {
           <span className="tab-dot"></span>
           <span className="tab-label">readme.md</span>
         </div>
-        <div className="about-content">
+        <div className="about-content glass">
           <p className="about-narrative">
             Self-taught web developer and automation specialist based in the Philippines. I build websites, automate repetitive work, and work with tools like WordPress, Shopify, and n8n. I’ve spent the past year working with real clients while continuing to learn and build — including this site, my first React project.
           </p>
@@ -460,7 +460,7 @@ function Home() {
         className={`terminal-session ${terminalVisible ? 'terminal-session-visible' : ''}`}
         ref={terminalRef}
       >
-        <div className="code-editor">
+        <div className="code-editor glass-box">
           <div className="code-editor-tab">
             <span className="code-editor-path">&gt; ~/portfolio/data</span>
           </div>

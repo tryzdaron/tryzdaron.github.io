@@ -80,7 +80,6 @@
 .terminal {
   width: 100%;
   max-width: 600px;
-  background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
@@ -199,7 +198,6 @@
 }
 
 .about-content {
-  background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 0 8px 8px 8px;
   padding: 24px 20px;
@@ -228,7 +226,6 @@
 }
 
 .code-editor {
-  background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
