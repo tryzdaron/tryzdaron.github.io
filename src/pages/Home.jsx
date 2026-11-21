@@ -460,7 +460,7 @@ function Home() {
         className={`terminal-session ${terminalVisible ? 'terminal-session-visible' : ''}`}
         ref={terminalRef}
       >
-        <div className="code-editor glass-box">
+        <div className="code-editor glass">
           <div className="code-editor-tab">
             <span className="code-editor-path">&gt; ~/portfolio/data</span>
           </div>

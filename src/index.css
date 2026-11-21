@@ -15,9 +15,8 @@
   --surface-deep: #F8F8F8;
   --surface-sunken: #E0E0E0;
   --surface-raised: #DFDFDF;
-  --glass: rgba(243, 243, 243, 0.0);
+  --glass: rgba(243, 243, 243, 0.8);
   --glass-blur: 4px;
-  --glass-box: rgba(243, 243, 243, 0.35);
 
   --border: #CACACA;
   --border-soft: #D8D8D8;
@@ -78,8 +77,7 @@
   --surface-deep: #1E1E1E;
   --surface-sunken: #181818;
   --surface-raised: #2D2D2D;
-  --glass: rgba(37, 37, 38, 0.0);
-  --glass-box: rgba(37, 37, 38, 0.35);
+  --glass: rgba(37, 37, 38, 0.8);
 
   --border: #333333;
   --border-soft: #2D2D2D;
@@ -228,14 +226,9 @@ html, body, #root {
   pointer-events: none;
 }
 
+/* put this class on any box that should be slightly see-through. the strength is --glass above */
 .glass {
   background-color: var(--glass);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-}
-
-.glass-box {
-  background-color: var(--glass-box);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
 }
